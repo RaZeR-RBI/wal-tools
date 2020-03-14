@@ -47,7 +47,7 @@ int main(int argc, char const *argv[])
 		printf("Unable to read enough bytes to parse the header\n");
 		goto on_err;
 	}
-	wal_read_header(&buffer, &header);
+	wal_read_header((const unsigned char *)&buffer, &header);
 	print_info(header);
 	return 0;
 on_err:

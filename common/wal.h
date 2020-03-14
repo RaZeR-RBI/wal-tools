@@ -18,6 +18,6 @@ struct wal_header
 
 #define WAL_HEADER_SIZE (sizeof(struct wal_header))
 
-void wal_read_header(void *buffer, struct wal_header *out);
+unsigned char *wal_read_header(const unsigned char *buffer, struct wal_header *out);
 
 #endif /* _WAL_H */
