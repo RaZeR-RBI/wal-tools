@@ -6,10 +6,13 @@
 
 #define is_printable(x) (x >= 0x20 && x <= 0x7E)
 
-static int invalid_name(const unsigned char *ptr)
+static int invalid_name(const unsigned char *ptr, int nonnull)
 {
 	for (int i = 0; i < NAME_LEN; i++) {
 		if (!is_printable(*ptr) && *ptr != 0) {
+			return 1;
+		}
+		if (nonnull && i == 0 && *ptr == 0) {
 			return 1;
 		}
 		ptr++;
@@ -28,14 +31,14 @@ int32_t wal_get_type(const unsigned char *buffer)
 	goto not_a_wal;
 
 possibly_daikatana:
-	if (invalid_name(buffer + offsetof(struct wal_dk_header, name)) ||
-		invalid_name(buffer + offsetof(struct wal_dk_header, animname))) {
+	if (invalid_name(buffer + offsetof(struct wal_dk_header, name), 1) ||
+		invalid_name(buffer + offsetof(struct wal_dk_header, animname), 0)) {
 		goto not_a_wal;
 	}
 	return WAL_TYPE_DAIKATANA;
 possibly_quake2:
-	if (invalid_name(buffer + offsetof(struct wal_q2_header, name)) ||
-		invalid_name(buffer + offsetof(struct wal_q2_header, animname))) {
+	if (invalid_name(buffer + offsetof(struct wal_q2_header, name), 1) ||
+		invalid_name(buffer + offsetof(struct wal_q2_header, animname), 0)) {
 		goto not_a_wal;
 	}
 	return WAL_TYPE_QUAKE2;

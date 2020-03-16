@@ -1,6 +1,9 @@
 #include <setjmp.h>
 #include <stdarg.h>
 #include <stddef.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
 #include "cmocka.h"
 
@@ -62,11 +65,26 @@ static void test_dk_wal_header(void **state)
 	assert_int_equal(header.value, 0x0);
 }
 
+static void test_malformed_header(void **state)
+{
+	(void)state; /* unused */
+	unsigned char data[WAL_DK_HEADER_SIZE];
+	const unsigned char *p = &data;
+	memset(&data, 0, WAL_DK_HEADER_SIZE);
+	// check Daikatana logic
+	data[0] = 3;
+	assert_int_equal(WAL_NOT_A_WAL, wal_get_type(p));
+	// check Quake 2 logic
+	data[0] = 4;
+	assert_int_equal(WAL_NOT_A_WAL, wal_get_type(p));
+}
+
 int main(void)
 {
 	const struct CMUnitTest tests[] = {
 		cmocka_unit_test(test_q2_wal_header),
 		cmocka_unit_test(test_dk_wal_header),
+		cmocka_unit_test(test_malformed_header),
 	};
 	return cmocka_run_group_tests(tests, NULL, NULL);
 }

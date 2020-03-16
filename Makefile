@@ -69,10 +69,10 @@ clean:
 	-rm -f $(WAL_INFO_EXE)
 	-rm -f $(TESTS_OBJ)
 	-rm -f $(TESTS_EXE)
-	-rm -rf *.gcov
-	-rm -rf *.gcno
-	-rm -rf *.gcda
-	-rm -rf *.gcda.info
-	-rm -rf docs/coverage/
+	-find . -type f -name '*.gcov' -delete
+	-find . -type f -name '*.gcno' -delete
+	-find . -type f -name '*.gcda' -delete
+	-find . -type f -name '*.gcda.info' -delete
+	-rm -rf docs/coverage/*
 
 $(shell mkdir -p $(BUILD_DIR))
