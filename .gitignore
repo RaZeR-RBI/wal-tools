@@ -1,6 +1,12 @@
 # VS Code
 **/.vscode/**/*
 
+# Coverage data
+*.gcda
+*.gcno
+*.gcda.info
+*.gcov
+
 # Output folder
 out/
 
