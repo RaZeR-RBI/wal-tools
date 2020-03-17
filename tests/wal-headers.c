@@ -69,7 +69,7 @@ static void test_malformed_header(void **state)
 {
 	(void)state; /* unused */
 	unsigned char data[WAL_DK_HEADER_SIZE];
-	const unsigned char *p = &data;
+	unsigned char *p = (unsigned char *)&data;
 	memset(&data, 0, WAL_DK_HEADER_SIZE);
 	// check Daikatana logic
 	data[0] = 3;
