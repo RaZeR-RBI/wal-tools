@@ -1,5 +1,7 @@
 #!/bin/bash
 shopt -s globstar
+make clean
+make
 make tests
 gcc --version
 gcov --version

@@ -75,6 +75,9 @@ static void test_malformed_header(void **state)
 	data[0] = 3;
 	assert_int_equal(WAL_NOT_A_WAL, wal_get_type(p));
 	// check Quake 2 logic
+	data[0] = 'a';
+	data[offsetof(struct wal_q2_header, animname)] = 4;
+	assert_int_equal(WAL_NOT_A_WAL, wal_get_type(p));
 	data[0] = 4;
 	assert_int_equal(WAL_NOT_A_WAL, wal_get_type(p));
 }
