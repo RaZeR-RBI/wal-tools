@@ -1,4 +1,5 @@
 #!/bin/bash
+set -e
 shopt -s globstar
 make clean
 make

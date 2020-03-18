@@ -8,7 +8,8 @@
 
 static int invalid_name(const unsigned char *ptr, int nonnull)
 {
-	for (int i = 0; i < NAME_LEN; i++) {
+	int i;
+	for (i = 0; i < NAME_LEN; i++) {
 		if (!is_printable(*ptr) && *ptr != 0) {
 			return 1;
 		}
@@ -49,12 +50,13 @@ not_a_wal:
 unsigned char *wal_q2_read_header(const unsigned char *buffer,
 								  struct wal_q2_header *out)
 {
+	int i;
 	unsigned char *ptr = (unsigned char *)buffer;
 	memcpy(&(out->name), ptr, NAME_LEN);
 	ptr += NAME_LEN;
 	out->width = read_le32(&ptr);
 	out->height = read_le32(&ptr);
-	for (int i = 0; i < MIP_LEVELS_Q2; i++) {
+	for (i = 0; i < MIP_LEVELS_Q2; i++) {
 		out->offsets[i] = read_le32(&ptr);
 	}
 	memcpy(&(out->animname), ptr, NAME_LEN);
@@ -68,12 +70,13 @@ unsigned char *wal_q2_read_header(const unsigned char *buffer,
 unsigned char *wal_dk_read_header(const unsigned char *buffer,
 								  struct wal_dk_header *out)
 {
+	int i;
 	unsigned char *ptr = (unsigned char *)(buffer + 4);
 	memcpy(&(out->name), ptr, NAME_LEN);
 	ptr += NAME_LEN;
 	out->width = read_le32(&ptr);
 	out->height = read_le32(&ptr);
-	for (int i = 0; i < MIP_LEVELS_DK; i++) {
+	for (i = 0; i < MIP_LEVELS_DK; i++) {
 		out->offsets[i] = read_le32(&ptr);
 	}
 	memcpy(&(out->animname), ptr, NAME_LEN);

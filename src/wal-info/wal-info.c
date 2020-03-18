@@ -6,10 +6,11 @@
 
 static void print_info_q2(struct wal_q2_header header)
 {
+	int i;
 	printf("Name: %.*s\n", NAME_LEN, header.name);
 	printf("Width: %d\n", header.width);
 	printf("Height: %d\n", header.height);
-	for (int i = 0; i < MIP_LEVELS_Q2; i++) {
+	for (i = 0; i < MIP_LEVELS_Q2; i++) {
 		printf("MIP %d offset: %#010x\n", i, header.offsets[i]);
 	}
 	printf("Next frame name: %.*s\n", NAME_LEN, header.animname);
@@ -20,10 +21,11 @@ static void print_info_q2(struct wal_q2_header header)
 
 static void print_info_dk(struct wal_dk_header header)
 {
+	int i;
 	printf("Name: %.*s\n", NAME_LEN, header.name);
 	printf("Width: %d\n", header.width);
 	printf("Height: %d\n", header.height);
-	for (int i = 0; i < MIP_LEVELS_DK; i++) {
+	for (i = 0; i < MIP_LEVELS_DK; i++) {
 		printf("MIP %d offset: %#010x\n", i, header.offsets[i]);
 	}
 	printf("Next frame name: %.*s\n", NAME_LEN, header.animname);
@@ -31,7 +33,7 @@ static void print_info_dk(struct wal_dk_header header)
 	printf("Contents: %#010x\n", header.contents);
 	printf("Value: %#010x\n", header.value);
 	printf("Palette:\n");
-	for (int i = 0; i < DK_PALETTE_ENTRIES; i += 3) {
+	for (i = 0; i < DK_PALETTE_ENTRIES; i += 3) {
 		printf("#%02x%02x%02x\n", header.palette[i], header.palette[i + 1],
 			   header.palette[i + 2]);
 	}
@@ -43,7 +45,7 @@ int main(int argc, char const *argv[])
 	struct wal_q2_header header_q2;
 	struct wal_dk_header header_dk;
 	char *path = concat_args(argc, argv);
-	char buffer[WAL_DK_HEADER_SIZE]; // Daikatana's header is bigger
+	char buffer[WAL_DK_HEADER_SIZE]; /* Daikatana's header is bigger */
 	const unsigned char *buf_ptr = (const unsigned char *)&buffer;
 
 	if (argc < 2) {

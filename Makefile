@@ -7,8 +7,8 @@ BASE_CFLAGS ?= -Wall -fPIC
 COVERAGE_FLAGS ?= -ftest-coverage -fprofile-arcs
 BUILD_DIR ?= out
 BASE_LDFLAGS ?=
-RELEASE_CFLAGS ?= $(BASE_CFLAGS) -O3
-DEBUG_CFLAGS ?= $(BASE_CFLAGS) -O0 -g -ggdb $(COVERAGE_FLAGS)
+RELEASE_CFLAGS ?= $(BASE_CFLAGS) -O3 -std=c89
+DEBUG_CFLAGS ?= $(BASE_CFLAGS) -O0 -g -ggdb $(COVERAGE_FLAGS) -std=c89
 RELEASE_LDFLAGS ?= $(BASE_LDFLAGS)
 DEBUG_LDFLAGS ?= $(BASE_LDFLAGS) -lgcov --coverage
 
@@ -55,7 +55,7 @@ TESTS_SRC = $(wildcard tests/*.c)
 TESTS_OBJ = $(patsubst %.c, %.o, $(TESTS_SRC))
 TESTS_EXE = $(patsubst %.o, %.out$(EXEEXT), $(TESTS_OBJ))
 $(TESTS_OBJ): %.o : %.c
-	$(CC) $(CFLAGS) -c $< -o $@
+	$(CC) $(BASE_CFLAGS) -c $< -o $@
 
 $(TESTS_EXE): %.out : %.o
 	$(CC) $(LDFLAGS) -lcmocka $< $(COMMON_OBJ) -o $@

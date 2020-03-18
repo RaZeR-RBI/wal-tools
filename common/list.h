@@ -2,7 +2,8 @@
 #define _LLIST_H
 #include <stdlib.h>
 
-typedef void (*ll_closure)(void *);
+typedef void (*ll_closure)(void **);
+typedef int (*ll_predicate)(void *);
 
 /* Linked list node */
 struct ll_node {
@@ -53,5 +54,11 @@ struct ll_node* ll_append(struct ll_node *root, const void *ptr, size_t isize);
 Appends a node to the end of the specified linked list.
 */
 struct ll_node* ll_append_node(struct ll_node* root, struct ll_node *node);
+
+/*
+Finds first list element which satisfies a specified predicate. Returns null
+when the element is not found.
+*/
+struct ll_node* ll_find(struct ll_node* root, ll_predicate fn);
 
 #endif /* _LLIST_H */

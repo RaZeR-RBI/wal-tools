@@ -9,6 +9,13 @@
 
 #include "../common/list.h"
 
+static char *g_string_to_find = NULL;
+
+static int find_string_predicate(void *value_ptr)
+{
+	return strcmp(*(char **)value_ptr, g_string_to_find) == 0 ? 1 : 0;
+}
+
 static void test_ll_from_array(void **state)
 {
 	(void)state;
@@ -41,6 +48,17 @@ static void test_ll_creation(void **state)
 	assert_int_equal(3, ll_size(one));
 }
 
+static void test_ll_find(void **state)
+{
+	(void)state;
+	const char *array[] = {"one", "two", "three"};
+	struct ll_node *root = ll_from_array((void *)&array, sizeof(size_t), 3);
+	g_string_to_find = "two";
+	assert_ptr_equal(root->next, ll_find(root, &find_string_predicate));
+	g_string_to_find = "foo";
+	assert_null(ll_find(root, &find_string_predicate));
+}
+
 static void test_ll_invalid_calls(void **state)
 {
 	(void)state;
@@ -50,6 +68,7 @@ static void test_ll_invalid_calls(void **state)
 	assert_int_equal(0, ll_size(NULL));
 	assert_int_equal(0, ll_free(NULL));
 	assert_null(ll_append(NULL, NULL, 1));
+	assert_null(ll_find(NULL, NULL));
 }
 
 int main(void)
@@ -58,6 +77,7 @@ int main(void)
 		cmocka_unit_test(test_ll_from_array),
 		cmocka_unit_test(test_ll_creation),
 		cmocka_unit_test(test_ll_invalid_calls),
+		cmocka_unit_test(test_ll_find),
 	};
 	return cmocka_run_group_tests(tests, NULL, NULL);
 }

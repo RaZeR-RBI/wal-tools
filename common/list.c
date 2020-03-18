@@ -1,16 +1,18 @@
+#include "mem.h"
+#include "list.h"
+
 #include <stdlib.h>
 #include <string.h>
 
-#include "list.h"
 
 struct ll_node *ll_create_node(const void *ptr, size_t isize)
 {
 	if (ptr == NULL || isize <= 0) {
 		return NULL;
 	}
-	struct ll_node *node = malloc(sizeof(struct ll_node));
+	struct ll_node *node = xmalloc(sizeof(struct ll_node));
 	node->next = NULL;
-	node->value_ptr = malloc(isize);
+	node->value_ptr = xmalloc(isize);
 	node->value_size = isize;
 	memcpy(node->value_ptr, ptr, isize);
 	return node;
@@ -31,10 +33,11 @@ struct ll_node *ll_from_array(const void *ptr, size_t isize, size_t n)
 	struct ll_node *prev_node = NULL;
 	struct ll_node *cur_node = NULL;
 	void *item_ptr = (void *)ptr;
+	int i;
 	if (n <= 0 || isize <= 0 || ptr == NULL) {
 		return NULL;
 	}
-	for (int i = 0; i < n; i++) {
+	for (i = 0; i < n; i++) {
 		if (cur_node == NULL) {
 			cur_node = ll_create_node(item_ptr, isize);
 			root_node = cur_node;
@@ -109,4 +112,19 @@ struct ll_node *ll_append_node(struct ll_node *root, struct ll_node *node)
 	}
 	last_node->next = node;
 	return node;
+}
+
+struct ll_node *ll_find(struct ll_node *root, ll_predicate fn)
+{
+	struct ll_node *cur_node = root;
+	if (fn == NULL) {
+		return NULL;
+	}
+	while (cur_node != NULL) {
+		if (fn(cur_node->value_ptr)) {
+			return cur_node;
+		}
+		cur_node = cur_node->next;
+	}
+	return NULL;
 }

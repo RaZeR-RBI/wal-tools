@@ -44,8 +44,8 @@ unsigned char *wal_q2_read_header(const unsigned char *buffer,
 
 /* Defines Daikatana WAL file header */
 struct wal_dk_header {
-	uint8_t version;	// should be 3
-	uint8_t padding[3]; // unused
+	uint8_t version;	/* should be 3 */
+	uint8_t padding[3]; /* unused */
 	char name[NAME_LEN];
 	uint32_t width, height;
 	uint32_t offsets[MIP_LEVELS_DK];
