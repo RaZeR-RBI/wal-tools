@@ -39,12 +39,12 @@ static void print_info_dk(struct wal_dk_header header)
 	}
 }
 
-int main(int argc, char const *argv[])
+int main(int argc, const char *argv[])
 {
 	FILE *fp;
 	struct wal_q2_header header_q2;
 	struct wal_dk_header header_dk;
-	char *path = concat_args(argc, argv);
+	char *path = cli_concat_args(argc, argv);
 	char buffer[WAL_DK_HEADER_SIZE]; /* Daikatana's header is bigger */
 	const unsigned char *buf_ptr = (const unsigned char *)&buffer;
 

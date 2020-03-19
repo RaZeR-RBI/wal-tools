@@ -61,4 +61,7 @@ when the element is not found.
 */
 struct ll_node* ll_find(struct ll_node* root, ll_predicate fn);
 
+
+void ll_foreach(const struct ll_node* root, ll_closure fn);
+
 #endif /* _LLIST_H */

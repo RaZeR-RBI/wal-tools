@@ -1,9 +1,8 @@
-#include "mem.h"
 #include "list.h"
+#include "mem.h"
 
 #include <stdlib.h>
 #include <string.h>
-
 
 struct ll_node *ll_create_node(const void *ptr, size_t isize)
 {
@@ -127,4 +126,16 @@ struct ll_node *ll_find(struct ll_node *root, ll_predicate fn)
 		cur_node = cur_node->next;
 	}
 	return NULL;
+}
+
+void ll_foreach(const struct ll_node *node, ll_closure fn)
+{
+	struct ll_node *cur_node = (struct ll_node *)node;
+	if (fn == NULL) {
+		return;
+	}
+	while (cur_node != NULL) {
+		fn(cur_node->value_ptr);
+		cur_node = cur_node->next;
+	}
 }

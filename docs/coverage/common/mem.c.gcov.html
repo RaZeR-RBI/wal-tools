@@ -32,17 +32,17 @@
             <td></td>
             <td class="headerItem">Lines:</td>
             <td class="headerCovTableEntry">5</td>
-            <td class="headerCovTableEntry">8</td>
-            <td class="headerCovTableEntryLo">62.5 %</td>
+            <td class="headerCovTableEntry">14</td>
+            <td class="headerCovTableEntryLo">35.7 %</td>
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2020-03-18 16:18:03</td>
+            <td class="headerValue">2020-03-19 13:58:14</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">1</td>
-            <td class="headerCovTableEntry">1</td>
-            <td class="headerCovTableEntryHi">100.0 %</td>
+            <td class="headerCovTableEntry">2</td>
+            <td class="headerCovTableEntryLo">50.0 %</td>
           </tr>
           <tr><td><img src="../glass.png" width=3 height=3 alt=""></td></tr>
         </table>
@@ -63,20 +63,29 @@
 <a name="1"><span class="lineNum">       1 </span>            : #include &quot;mem.h&quot;</a>
 <span class="lineNum">       2 </span>            : 
 <span class="lineNum">       3 </span>            : #include &lt;stdio.h&gt;
-<a name="4"><span class="lineNum">       4 </span>            : #include &lt;stdlib.h&gt;</a>
+<a name="4"><span class="lineNum">       4 </span>            : #include &lt;string.h&gt;</a>
 <span class="lineNum">       5 </span>            : 
-<span class="lineNum">       6 </span><span class="lineCov">         19 : void *xmalloc(size_t size)</span>
+<span class="lineNum">       6 </span><span class="lineCov">         43 : void *xmalloc(size_t size)</span>
 <span class="lineNum">       7 </span>            : {
-<span class="lineNum">       8 </span><span class="lineCov">         19 :         if (size == 0) {</span>
+<span class="lineNum">       8 </span><span class="lineCov">         43 :         if (size == 0) {</span>
 <span class="lineNum">       9 </span><span class="lineNoCov">          0 :                 size = 1;</span>
 <span class="lineNum">      10 </span>            :         }
-<span class="lineNum">      11 </span><span class="lineCov">         19 :         void *result = malloc(size);</span>
-<span class="lineNum">      12 </span><span class="lineCov">         19 :         if (result == NULL) {</span>
+<span class="lineNum">      11 </span><span class="lineCov">         43 :         void *result = malloc(size);</span>
+<span class="lineNum">      12 </span><span class="lineCov">         43 :         if (result == NULL) {</span>
 <span class="lineNum">      13 </span><span class="lineNoCov">          0 :                 fprintf(stderr, &quot;Out of memory - unable to allocate %lu bytes&quot;, size);</span>
 <span class="lineNum">      14 </span><span class="lineNoCov">          0 :                 abort();</span>
 <span class="lineNum">      15 </span>            :         }
-<span class="lineNum">      16 </span><span class="lineCov">         19 :         return result;</span>
-<span class="lineNum">      17 </span>            : }
+<span class="lineNum">      16 </span><span class="lineCov">         43 :         return result;</span>
+<a name="17"><span class="lineNum">      17 </span>            : }</a>
+<span class="lineNum">      18 </span>            : 
+<span class="lineNum">      19 </span><span class="lineNoCov">          0 : char *xstrdup(const char *str)</span>
+<span class="lineNum">      20 </span>            : {
+<span class="lineNum">      21 </span><span class="lineNoCov">          0 :         size_t length = strlen(str);</span>
+<span class="lineNum">      22 </span><span class="lineNoCov">          0 :         char *result = xmalloc(length + 1);</span>
+<span class="lineNum">      23 </span><span class="lineNoCov">          0 :         memcpy(result, str, length);</span>
+<span class="lineNum">      24 </span><span class="lineNoCov">          0 :         *(result + length) = '\0';</span>
+<span class="lineNum">      25 </span><span class="lineNoCov">          0 :         return result;</span>
+<span class="lineNum">      26 </span>            : }
 </pre>
       </td>
     </tr>
