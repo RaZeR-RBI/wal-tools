@@ -7,8 +7,6 @@
 #define PTR_SIZE (sizeof(intptr_t))
 void *xmalloc(size_t size);
 
-char *xstrdup(const char *str);
-
 typedef struct sized_ptr {
 	unsigned char *ptr;
 	size_t size;

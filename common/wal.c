@@ -109,6 +109,9 @@ static struct ll_node *wal_q2_read(const sptr_t data, const sptr_t palette)
 									NULL};
 		mips[i] = i_data;
 		expected_len /= 4;
+		if (expected_len <= 0) {
+			expected_len = 1;
+		}
 	}
 	return ll_from_array(&mips, sizeof(struct image_data), MIP_LEVELS_Q2);
 err:
@@ -116,8 +119,46 @@ err:
 	return NULL;
 }
 
+static struct ll_node *wal_dk_read(const sptr_t data, const sptr_t palette)
+{
+	int i;
+	struct image_data mips[MIP_LEVELS_DK];
+	struct wal_dk_header *header = xmalloc(sizeof(struct wal_dk_header));
+	wal_dk_read_header(data.ptr, header);
+
+	sptr_t pal = palette;
+	if (SPTR_IS_NULL(pal)) {
+		pal.ptr = &header->palette[0];
+		pal.size = DK_PALETTE_SIZE;
+	}
+	size_t expected_len = header->width * header->height;
+	for (i = 0; i < MIP_LEVELS_DK; i++) {
+		sptr_t p = sptr_slice(data, header->offsets[i], expected_len);
+		if (SPTR_IS_NULL(p)) {
+			goto err;
+		}
+		sptr_t copy = {xmalloc(p.size), p.size};
+		memcpy(copy.ptr, p.ptr, p.size);
+		struct image_palette p_data = {pal, PALETTE_TYPE_RGB_256};
+		struct image_data i_data = {copy, p_data, IMAGE_TYPE_WAL_DK, header,
+									NULL};
+		mips[i] = i_data;
+		expected_len /= 4;
+		if (expected_len <= 0) {
+			expected_len = 1;
+		}
+	}
+	return ll_from_array(&mips, sizeof(struct image_data), MIP_LEVELS_DK);
+err:
+	free(header);
+	return NULL;
+}
+
 struct ll_node *wal_read(const sptr_t data, const sptr_t palette)
 {
+	if (SPTR_IS_NULL(data)) {
+		return NULL;
+	}
 	/* Daikatana header is bigger */
 	if (data.size < WAL_DK_HEADER_SIZE) {
 		return NULL;
@@ -125,6 +166,8 @@ struct ll_node *wal_read(const sptr_t data, const sptr_t palette)
 	switch (wal_get_type(data.ptr)) {
 		case WAL_TYPE_QUAKE2:
 			return wal_q2_read(data, palette);
+		case WAL_TYPE_DAIKATANA:
+			return wal_dk_read(data, palette);
 		default:
 			return NULL;
 	}

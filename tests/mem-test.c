@@ -14,7 +14,7 @@ void test_sptr_slice(void **state)
 	unsigned char buffer[] = "abcdefg 1234567\0";
 	buffer[7] = 0;
 
-	sptr_t p = {&buffer, 16};
+	sptr_t p = {(unsigned char *)&buffer, 16};
 	sptr_t first_half = sptr_slice(p, 0, 8);
 	assert_false(SPTR_IS_NULL(first_half));
 	assert_int_equal(first_half.size, 8);

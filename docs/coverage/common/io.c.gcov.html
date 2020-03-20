@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2020-03-20 18:08:15</td>
+            <td class="headerValue">2020-03-20 18:40:17</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">1</td>
@@ -65,34 +65,34 @@
 <span class="lineNum">       3 </span>            : #include &lt;stdio.h&gt;
 <a name="4"><span class="lineNum">       4 </span>            : #include &lt;stdlib.h&gt;</a>
 <span class="lineNum">       5 </span>            : 
-<span class="lineNum">       6 </span><span class="lineCov">          2 : sptr_t file_read(const char *path, const char *mode)</span>
+<span class="lineNum">       6 </span><span class="lineCov">          3 : sptr_t file_read(const char *path, const char *mode)</span>
 <span class="lineNum">       7 </span>            : {
-<span class="lineNum">       8 </span><span class="lineCov">          2 :         sptr_t result = SPTR_NULL;</span>
-<span class="lineNum">       9 </span><span class="lineCov">          2 :         if (path == NULL || mode == NULL) {</span>
+<span class="lineNum">       8 </span><span class="lineCov">          3 :         sptr_t result = SPTR_NULL;</span>
+<span class="lineNum">       9 </span><span class="lineCov">          3 :         if (path == NULL || mode == NULL) {</span>
 <span class="lineNum">      10 </span><span class="lineNoCov">          0 :                 return result;</span>
 <span class="lineNum">      11 </span>            :         }
-<span class="lineNum">      12 </span><span class="lineCov">          2 :         FILE *f = fopen(path, mode);</span>
-<span class="lineNum">      13 </span><span class="lineCov">          2 :         if (!f) {</span>
+<span class="lineNum">      12 </span><span class="lineCov">          3 :         FILE *f = fopen(path, mode);</span>
+<span class="lineNum">      13 </span><span class="lineCov">          3 :         if (!f) {</span>
 <span class="lineNum">      14 </span><span class="lineNoCov">          0 :                 perror(&quot;Unable to open file&quot;);</span>
 <span class="lineNum">      15 </span><span class="lineNoCov">          0 :                 fprintf(stderr, &quot;File: \&quot;%s\&quot;, mode \&quot;%s\&quot;\n&quot;, path, mode);</span>
 <span class="lineNum">      16 </span><span class="lineNoCov">          0 :                 return result;</span>
 <span class="lineNum">      17 </span>            :         }
-<span class="lineNum">      18 </span><span class="lineCov">          2 :         fseek(f, 0, SEEK_END);</span>
-<span class="lineNum">      19 </span><span class="lineCov">          2 :         long fsize = ftell(f);</span>
-<span class="lineNum">      20 </span><span class="lineCov">          2 :         fseek(f, 0, SEEK_SET);</span>
+<span class="lineNum">      18 </span><span class="lineCov">          3 :         fseek(f, 0, SEEK_END);</span>
+<span class="lineNum">      19 </span><span class="lineCov">          3 :         long fsize = ftell(f);</span>
+<span class="lineNum">      20 </span><span class="lineCov">          3 :         fseek(f, 0, SEEK_SET);</span>
 <span class="lineNum">      21 </span>            : 
-<span class="lineNum">      22 </span><span class="lineCov">          2 :         unsigned char *data = xmalloc(fsize);</span>
-<span class="lineNum">      23 </span><span class="lineCov">          2 :         if (fread(data, 1, fsize, f) != fsize) {</span>
+<span class="lineNum">      22 </span><span class="lineCov">          3 :         unsigned char *data = xmalloc(fsize);</span>
+<span class="lineNum">      23 </span><span class="lineCov">          3 :         if (fread(data, 1, fsize, f) != fsize) {</span>
 <span class="lineNum">      24 </span><span class="lineNoCov">          0 :                 fprintf(stderr, &quot;Unable to read all bytes from a file\n&quot;);</span>
 <span class="lineNum">      25 </span><span class="lineNoCov">          0 :                 fprintf(stderr, &quot;File: \&quot;%s\&quot;, mode \&quot;%s\&quot;\n&quot;, path, mode);</span>
 <span class="lineNum">      26 </span><span class="lineNoCov">          0 :                 free(data);</span>
 <span class="lineNum">      27 </span><span class="lineNoCov">          0 :                 goto end;</span>
 <span class="lineNum">      28 </span>            :         }
-<span class="lineNum">      29 </span><span class="lineCov">          2 :         result.ptr = data;</span>
-<span class="lineNum">      30 </span><span class="lineCov">          2 :         result.size = fsize;</span>
-<span class="lineNum">      31 </span><span class="lineCov">          2 : end:</span>
-<span class="lineNum">      32 </span><span class="lineCov">          2 :         fclose(f);</span>
-<span class="lineNum">      33 </span><span class="lineCov">          2 :         return result;</span>
+<span class="lineNum">      29 </span><span class="lineCov">          3 :         result.ptr = data;</span>
+<span class="lineNum">      30 </span><span class="lineCov">          3 :         result.size = fsize;</span>
+<span class="lineNum">      31 </span><span class="lineCov">          3 : end:</span>
+<span class="lineNum">      32 </span><span class="lineCov">          3 :         fclose(f);</span>
+<span class="lineNum">      33 </span><span class="lineCov">          3 :         return result;</span>
 <span class="lineNum">      34 </span>            : }
 </pre>
       </td>

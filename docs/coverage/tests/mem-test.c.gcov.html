@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2020-03-20 18:08:15</td>
+            <td class="headerValue">2020-03-20 18:40:17</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">2</td>
@@ -76,7 +76,7 @@
 <span class="lineNum">      14 </span><span class="lineCov">          1 :         unsigned char buffer[] = &quot;abcdefg 1234567\0&quot;;</span>
 <span class="lineNum">      15 </span><span class="lineCov">          1 :         buffer[7] = 0;</span>
 <span class="lineNum">      16 </span>            : 
-<span class="lineNum">      17 </span><span class="lineCov">          1 :         sptr_t p = {&amp;buffer, 16};</span>
+<span class="lineNum">      17 </span><span class="lineCov">          1 :         sptr_t p = {(unsigned char *)&amp;buffer, 16};</span>
 <span class="lineNum">      18 </span><span class="lineCov">          1 :         sptr_t first_half = sptr_slice(p, 0, 8);</span>
 <span class="lineNum">      19 </span><span class="lineCov">          1 :         assert_false(SPTR_IS_NULL(first_half));</span>
 <span class="lineNum">      20 </span><span class="lineCov">          1 :         assert_int_equal(first_half.size, 8);</span>

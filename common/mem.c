@@ -16,15 +16,6 @@ void *xmalloc(size_t size)
 	return result;
 }
 
-char *xstrdup(const char *str)
-{
-	size_t length = strlen(str);
-	char *result = xmalloc(length + 1);
-	memcpy(result, str, length);
-	*(result + length) = '\0';
-	return result;
-}
-
 sptr_t sptr_slice(sptr_t ptr, size_t from, size_t n)
 {
 	if (SPTR_IS_NULL(ptr) || n == 0) {

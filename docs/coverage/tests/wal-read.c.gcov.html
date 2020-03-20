@@ -31,17 +31,17 @@
             <td class="headerValue">coverage.info</td>
             <td></td>
             <td class="headerItem">Lines:</td>
-            <td class="headerCovTableEntry">32</td>
-            <td class="headerCovTableEntry">32</td>
-            <td class="headerCovTableEntryHi">100.0 %</td>
+            <td class="headerCovTableEntry">77</td>
+            <td class="headerCovTableEntry">78</td>
+            <td class="headerCovTableEntryHi">98.7 %</td>
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2020-03-20 18:08:15</td>
+            <td class="headerValue">2020-03-20 18:40:17</td>
             <td></td>
             <td class="headerItem">Functions:</td>
-            <td class="headerCovTableEntry">2</td>
-            <td class="headerCovTableEntry">2</td>
+            <td class="headerCovTableEntry">3</td>
+            <td class="headerCovTableEntry">3</td>
             <td class="headerCovTableEntryHi">100.0 %</td>
           </tr>
           <tr><td><img src="../glass.png" width=3 height=3 alt=""></td></tr>
@@ -114,15 +114,87 @@
 <span class="lineNum">      52 </span><span class="lineCov">         16 :                         assert_int_equal(actual, expected);</span>
 <span class="lineNum">      53 </span>            :                 }
 <span class="lineNum">      54 </span>            :         }
-<a name="55"><span class="lineNum">      55 </span><span class="lineCov">          1 : }</span></a>
-<span class="lineNum">      56 </span>            : 
-<span class="lineNum">      57 </span><span class="lineCov">          1 : int main(void)</span>
-<span class="lineNum">      58 </span>            : {
-<span class="lineNum">      59 </span><span class="lineCov">          1 :         const struct CMUnitTest tests[] = {</span>
-<span class="lineNum">      60 </span>            :                 cmocka_unit_test(test_q2_read),
-<span class="lineNum">      61 </span>            :         };
-<span class="lineNum">      62 </span><span class="lineCov">          1 :         return cmocka_run_group_tests(tests, NULL, NULL);</span>
-<span class="lineNum">      63 </span>            : }
+<span class="lineNum">      55 </span>            : 
+<span class="lineNum">      56 </span><span class="lineCov">          1 :         assert_int_equal(IMAGE_TYPE_WAL_Q2, mips[0].type);</span>
+<span class="lineNum">      57 </span><span class="lineCov">          1 :         assert_int_equal(PALETTE_TYPE_RGB_256, mips[0].palette.type);</span>
+<span class="lineNum">      58 </span><span class="lineCov">          1 :         assert_ptr_equal(palette.ptr, mips[0].palette.data.ptr);</span>
+<span class="lineNum">      59 </span><span class="lineCov">          1 :         assert_int_equal(768, mips[0].palette.data.size);</span>
+<a name="60"><span class="lineNum">      60 </span><span class="lineCov">          1 : }</span></a>
+<span class="lineNum">      61 </span>            : 
+<span class="lineNum">      62 </span><span class="lineCov">          1 : void test_dk_read(void **state)</span>
+<span class="lineNum">      63 </span>            : {
+<span class="lineNum">      64 </span>            :         (void)state;
+<span class="lineNum">      65 </span>            :         int i, j;
+<span class="lineNum">      66 </span><span class="lineCov">          1 :         sptr_t data = file_read(&quot;w_glove_hiro.wal&quot;, &quot;r&quot;);</span>
+<span class="lineNum">      67 </span><span class="lineCov">          1 :         sptr_t palette = SPTR_NULL;</span>
+<span class="lineNum">      68 </span><span class="lineCov">          1 :         assert_false(SPTR_IS_NULL(data));</span>
+<span class="lineNum">      69 </span>            : 
+<span class="lineNum">      70 </span><span class="lineCov">          1 :         struct ll_node *mips_ll = wal_read(data, palette);</span>
+<span class="lineNum">      71 </span><span class="lineCov">          1 :         sptr_free(&amp;data);</span>
+<span class="lineNum">      72 </span><span class="lineCov">          1 :         assert_non_null(mips_ll);</span>
+<span class="lineNum">      73 </span><span class="lineCov">          1 :         assert_int_equal(MIP_LEVELS_DK, ll_size(mips_ll));</span>
+<span class="lineNum">      74 </span>            : 
+<span class="lineNum">      75 </span>            :         struct image_data mips[MIP_LEVELS_DK];
+<span class="lineNum">      76 </span><span class="lineCov">          1 :         struct ll_node *current = mips_ll;</span>
+<span class="lineNum">      77 </span><span class="lineCov">         10 :         for (i = 0; i &lt; MIP_LEVELS_DK; i++) {</span>
+<span class="lineNum">      78 </span><span class="lineCov">          9 :                 mips[i] = *(struct image_data *)current-&gt;value_ptr;</span>
+<span class="lineNum">      79 </span><span class="lineCov">          9 :                 current = current-&gt;next;</span>
+<span class="lineNum">      80 </span>            :         }
+<span class="lineNum">      81 </span>            : 
+<span class="lineNum">      82 </span><span class="lineCov">          1 :         struct wal_dk_header *header = (struct wal_dk_header *)mips[0].header;</span>
+<span class="lineNum">      83 </span><span class="lineCov">          1 :         assert_int_equal(128, header-&gt;width);</span>
+<span class="lineNum">      84 </span><span class="lineCov">          1 :         assert_int_equal(256, header-&gt;height);</span>
+<span class="lineNum">      85 </span><span class="lineCov">          1 :         assert_int_equal(0, header-&gt;flags);</span>
+<span class="lineNum">      86 </span><span class="lineCov">          1 :         assert_int_equal(0, header-&gt;contents);</span>
+<span class="lineNum">      87 </span><span class="lineCov">          1 :         assert_int_equal(0, header-&gt;value);</span>
+<span class="lineNum">      88 </span>            : 
+<span class="lineNum">      89 </span><span class="lineCov">          1 :         assert_int_equal(128 * 256, mips[0].pixels.size);</span>
+<span class="lineNum">      90 </span><span class="lineCov">          1 :         assert_int_equal(64 * 128, mips[1].pixels.size);</span>
+<span class="lineNum">      91 </span><span class="lineCov">          1 :         assert_int_equal(32 * 64, mips[2].pixels.size);</span>
+<span class="lineNum">      92 </span><span class="lineCov">          1 :         assert_int_equal(16 * 32, mips[3].pixels.size);</span>
+<span class="lineNum">      93 </span><span class="lineCov">          1 :         assert_int_equal(8 * 16, mips[4].pixels.size);</span>
+<span class="lineNum">      94 </span><span class="lineCov">          1 :         assert_int_equal(4 * 8, mips[5].pixels.size);</span>
+<span class="lineNum">      95 </span><span class="lineCov">          1 :         assert_int_equal(2 * 4, mips[6].pixels.size);</span>
+<span class="lineNum">      96 </span><span class="lineCov">          1 :         assert_int_equal(1 * 2, mips[7].pixels.size);</span>
+<span class="lineNum">      97 </span><span class="lineCov">          1 :         assert_int_equal(1 * 1, mips[8].pixels.size);</span>
+<span class="lineNum">      98 </span>            : 
+<span class="lineNum">      99 </span><span class="lineCov">          1 :         uint8_t first_4_pixels[9][4] = {</span>
+<span class="lineNum">     100 </span>            :                 {0x01, 0x01, 0x01, 0x01}, {0x20, 0x01, 0x10, 0x20},
+<span class="lineNum">     101 </span>            :                 {0x98, 0x10, 0x21, 0x98}, {0x10, 0x8f, 0x9c, 0x00},
+<span class="lineNum">     102 </span>            :                 {0x98, 0x9c, 0x10, 0x98}, {0x20, 0x11, 0x13, 0x22},
+<span class="lineNum">     103 </span>            :                 {0x98, 0x13, 0x8f, 0x98}, {0x11, 0x14, 0, 0},
+<span class="lineNum">     104 </span>            :                 {0x13, 0, 0, 0},
+<span class="lineNum">     105 </span>            :         };
+<span class="lineNum">     106 </span>            : 
+<span class="lineNum">     107 </span><span class="lineCov">          5 :         for (i = 0; i &lt; 4; i++) {</span>
+<span class="lineNum">     108 </span><span class="lineCov">         20 :                 for (j = 0; j &lt; 4; j++) {</span>
+<span class="lineNum">     109 </span><span class="lineCov">         16 :                         if (j &gt;= mips[i].pixels.size) {</span>
+<span class="lineNum">     110 </span><span class="lineNoCov">          0 :                                 break;</span>
+<span class="lineNum">     111 </span>            :                         }
+<span class="lineNum">     112 </span><span class="lineCov">         16 :                         uint8_t expected = first_4_pixels[i][j];</span>
+<span class="lineNum">     113 </span><span class="lineCov">         16 :                         uint8_t actual = *(uint8_t *)(mips[i].pixels.ptr + j);</span>
+<span class="lineNum">     114 </span><span class="lineCov">         16 :                         assert_int_equal(actual, expected);</span>
+<span class="lineNum">     115 </span>            :                 }
+<span class="lineNum">     116 </span>            :         }
+<span class="lineNum">     117 </span>            : 
+<span class="lineNum">     118 </span><span class="lineCov">          1 :         uint8_t first_4_colors[12] = {0x0b, 0x0b, 0x0b, 0x16, 0x16, 0x16,</span>
+<span class="lineNum">     119 </span>            :                                                                   0x21, 0x21, 0x21, 0x2c, 0x2c, 0x2c};
+<span class="lineNum">     120 </span>            : 
+<span class="lineNum">     121 </span><span class="lineCov">          1 :         assert_int_equal(IMAGE_TYPE_WAL_DK, mips[0].type);</span>
+<span class="lineNum">     122 </span><span class="lineCov">          1 :         assert_int_equal(PALETTE_TYPE_RGB_256, mips[0].palette.type);</span>
+<span class="lineNum">     123 </span><span class="lineCov">          1 :         assert_non_null(mips[0].palette.data.ptr);</span>
+<span class="lineNum">     124 </span><span class="lineCov">          1 :         assert_int_equal(768, mips[0].palette.data.size);</span>
+<span class="lineNum">     125 </span><span class="lineCov">          1 :         assert_memory_equal(&amp;first_4_colors, mips[0].palette.data.ptr, 12);</span>
+<a name="126"><span class="lineNum">     126 </span><span class="lineCov">          1 : }</span></a>
+<span class="lineNum">     127 </span>            : 
+<span class="lineNum">     128 </span><span class="lineCov">          1 : int main(void)</span>
+<span class="lineNum">     129 </span>            : {
+<span class="lineNum">     130 </span><span class="lineCov">          1 :         const struct CMUnitTest tests[] = {</span>
+<span class="lineNum">     131 </span>            :                 cmocka_unit_test(test_q2_read),
+<span class="lineNum">     132 </span>            :                 cmocka_unit_test(test_dk_read),
+<span class="lineNum">     133 </span>            :         };
+<span class="lineNum">     134 </span><span class="lineCov">          1 :         return cmocka_run_group_tests(tests, NULL, NULL);</span>
+<span class="lineNum">     135 </span>            : }
 </pre>
       </td>
     </tr>

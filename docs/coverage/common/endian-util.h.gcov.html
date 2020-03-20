@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2020-03-20 18:08:15</td>
+            <td class="headerValue">2020-03-20 18:40:17</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">1</td>
@@ -76,16 +76,16 @@
 <span class="lineNum">      14 </span><span class="lineNoCov">          0 :         return result;</span>
 <a name="15"><span class="lineNum">      15 </span>            : }</a>
 <span class="lineNum">      16 </span>            : 
-<span class="lineNum">      17 </span><span class="lineCov">         32 : uint32_t read_le32(unsigned char **buffer)</span>
+<span class="lineNum">      17 </span><span class="lineCov">         46 : uint32_t read_le32(unsigned char **buffer)</span>
 <span class="lineNum">      18 </span>            : {
 <span class="lineNum">      19 </span>            :         uint8_t b1, b2, b3, b4;
-<span class="lineNum">      20 </span><span class="lineCov">         32 :         b1 = *(uint8_t *)(*buffer);</span>
-<span class="lineNum">      21 </span><span class="lineCov">         32 :         b2 = *(uint8_t *)(*buffer + 1);</span>
-<span class="lineNum">      22 </span><span class="lineCov">         32 :         b3 = *(uint8_t *)(*buffer + 2);</span>
-<span class="lineNum">      23 </span><span class="lineCov">         32 :         b4 = *(uint8_t *)(*buffer + 3);</span>
-<span class="lineNum">      24 </span><span class="lineCov">         32 :         uint32_t result = le32toh((b1) + (b2 &lt;&lt; 8) + (b3 &lt;&lt; 16) + (b4 &lt;&lt; 24));</span>
-<span class="lineNum">      25 </span><span class="lineCov">         32 :         (*buffer) += 4;</span>
-<span class="lineNum">      26 </span><span class="lineCov">         32 :         return result;</span>
+<span class="lineNum">      20 </span><span class="lineCov">         46 :         b1 = *(uint8_t *)(*buffer);</span>
+<span class="lineNum">      21 </span><span class="lineCov">         46 :         b2 = *(uint8_t *)(*buffer + 1);</span>
+<span class="lineNum">      22 </span><span class="lineCov">         46 :         b3 = *(uint8_t *)(*buffer + 2);</span>
+<span class="lineNum">      23 </span><span class="lineCov">         46 :         b4 = *(uint8_t *)(*buffer + 3);</span>
+<span class="lineNum">      24 </span><span class="lineCov">         46 :         uint32_t result = le32toh((b1) + (b2 &lt;&lt; 8) + (b3 &lt;&lt; 16) + (b4 &lt;&lt; 24));</span>
+<span class="lineNum">      25 </span><span class="lineCov">         46 :         (*buffer) += 4;</span>
+<span class="lineNum">      26 </span><span class="lineCov">         46 :         return result;</span>
 <a name="27"><span class="lineNum">      27 </span>            : }</a>
 <span class="lineNum">      28 </span>            : 
 <span class="lineNum">      29 </span><span class="lineNoCov">          0 : void write_le16(uint16_t val, unsigned char **buffer)</span>
