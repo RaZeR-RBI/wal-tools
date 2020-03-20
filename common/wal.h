@@ -2,6 +2,9 @@
 #define _WAL_H
 
 #include "defs.h"
+#include "image.h"
+#include "list.h"
+#include "mem.h"
 #include <stdint.h>
 
 #define NAME_LEN 32
@@ -59,5 +62,14 @@ struct wal_dk_header {
 
 unsigned char *wal_dk_read_header(const unsigned char *buffer,
 								  struct wal_dk_header *out);
+
+/* -------------------------------------------------------------------------- */
+
+/*
+Autodetects and tries to read a WAL file.
+Returns a linked list of struct image_data which correspond to each mip level or
+NULL on failure.
+*/
+struct ll_node *wal_read(const sptr_t data, const sptr_t palette);
 
 #endif /* _WAL_H */

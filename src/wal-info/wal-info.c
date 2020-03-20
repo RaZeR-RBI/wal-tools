@@ -63,7 +63,7 @@ int main(int argc, const char *argv[])
 	size_t total_len = fread(&buffer, 1, WAL_DK_HEADER_SIZE, fp);
 	fclose(fp);
 	if (total_len < WAL_Q2_HEADER_SIZE) {
-		printf("Unable to read enough bytes to parse the header\n");
+		fprintf(stderr, "Unable to read enough bytes to parse the header\n");
 		goto on_err;
 	}
 	int32_t type = wal_get_type(buf_ptr);

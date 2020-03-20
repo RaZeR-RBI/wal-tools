@@ -8,14 +8,16 @@ set +e
 
 TESTS_OK="true"
 
-for file in tests/*.out*
+cd tests
+for file in *.out*
 do
 	echo "[====================] $file"
-	$file
+	./$file
 	if [ $? -ne 0 ]; then
 	TESTS_OK="false"
 	fi
 done
+cd ../
 
 if [ "$TESTS_OK" = "false" ]; then
 	echo "Tests have errors, exiting"

@@ -24,3 +24,21 @@ char *xstrdup(const char *str)
 	*(result + length) = '\0';
 	return result;
 }
+
+sptr_t sptr_slice(sptr_t ptr, size_t from, size_t n)
+{
+	if (SPTR_IS_NULL(ptr) || n == 0) {
+		return SPTR_NULL;
+	}
+	if (from + n > ptr.size) {
+		return SPTR_NULL;
+	}
+	return (sptr_t){ptr.ptr + from, n};
+}
+
+void sptr_free(sptr_t* ptr)
+{
+	free(ptr->ptr);
+	ptr->ptr = NULL;
+	ptr->size = 0;
+}

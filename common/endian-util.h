@@ -26,4 +26,16 @@ uint32_t read_le32(unsigned char **buffer)
 	return result;
 }
 
+void write_le16(uint16_t val, unsigned char **buffer)
+{
+	*(uint16_t *)buffer = htole16(val);
+	(*buffer) += 2;
+}
+
+void write_le32(uint32_t val, unsigned char **buffer)
+{
+	*(uint32_t *)buffer = htole32(val);
+	(*buffer) += 4;
+}
+
 #endif /* _ENDIAN_UTIL_H */
