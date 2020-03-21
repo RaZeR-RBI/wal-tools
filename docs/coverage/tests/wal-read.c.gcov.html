@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2020-03-20 18:40:17</td>
+            <td class="headerValue">2020-03-21 18:14:23</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">3</td>
@@ -92,8 +92,8 @@
 <span class="lineNum">      30 </span><span class="lineCov">          1 :         mips[3] = *(struct image_data *)mips_ll-&gt;next-&gt;next-&gt;next-&gt;value_ptr;</span>
 <span class="lineNum">      31 </span>            : 
 <span class="lineNum">      32 </span><span class="lineCov">          1 :         struct wal_q2_header *header = (struct wal_q2_header *)mips[0].header;</span>
-<span class="lineNum">      33 </span><span class="lineCov">          1 :         assert_int_equal(32, header-&gt;width);</span>
-<span class="lineNum">      34 </span><span class="lineCov">          1 :         assert_int_equal(32, header-&gt;height);</span>
+<span class="lineNum">      33 </span><span class="lineCov">          1 :         assert_int_equal(32, mips[0].width);</span>
+<span class="lineNum">      34 </span><span class="lineCov">          1 :         assert_int_equal(32, mips[0].height);</span>
 <span class="lineNum">      35 </span><span class="lineCov">          1 :         assert_int_equal(0x80, header-&gt;flags);</span>
 <span class="lineNum">      36 </span><span class="lineCov">          1 :         assert_int_equal(0x30000, header-&gt;contents);</span>
 <span class="lineNum">      37 </span><span class="lineCov">          1 :         assert_int_equal(0, header-&gt;value);</span>

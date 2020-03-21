@@ -1,6 +1,9 @@
 # VS Code
 **/.vscode/**/*
 
+# Test output files
+tests/out*
+
 # Coverage data
 *.gcda
 *.gcno

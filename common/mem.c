@@ -16,6 +16,12 @@ void *xmalloc(size_t size)
 	return result;
 }
 
+sptr_t sptr_xmalloc(size_t size)
+{
+	unsigned char *p = xmalloc(size);
+	return (sptr_t){p, size};
+}
+
 sptr_t sptr_slice(sptr_t ptr, size_t from, size_t n)
 {
 	if (SPTR_IS_NULL(ptr) || n == 0) {
@@ -27,7 +33,7 @@ sptr_t sptr_slice(sptr_t ptr, size_t from, size_t n)
 	return (sptr_t){ptr.ptr + from, n};
 }
 
-void sptr_free(sptr_t* ptr)
+void sptr_free(sptr_t *ptr)
 {
 	free(ptr->ptr);
 	ptr->ptr = NULL;

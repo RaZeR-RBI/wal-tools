@@ -20,8 +20,12 @@ struct image_data {
 	sptr_t pixels;
 	struct image_palette palette;
 	uint8_t type; /* image_type */
+	uint32_t width;
+	uint32_t height;
 	void *header; /* pointer to original header struct */
 	void *userdata;
 };
+
+void flip_bgr(sptr_t colors);
 
 #endif /* _IMAGE_H */

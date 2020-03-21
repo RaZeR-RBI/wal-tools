@@ -30,8 +30,8 @@ void test_q2_read(void **state)
 	mips[3] = *(struct image_data *)mips_ll->next->next->next->value_ptr;
 
 	struct wal_q2_header *header = (struct wal_q2_header *)mips[0].header;
-	assert_int_equal(32, header->width);
-	assert_int_equal(32, header->height);
+	assert_int_equal(32, mips[0].width);
+	assert_int_equal(32, mips[0].height);
 	assert_int_equal(0x80, header->flags);
 	assert_int_equal(0x30000, header->contents);
 	assert_int_equal(0, header->value);

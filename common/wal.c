@@ -105,7 +105,12 @@ static struct ll_node *wal_q2_read(const sptr_t data, const sptr_t palette)
 		sptr_t copy = {xmalloc(p.size), p.size};
 		memcpy(copy.ptr, p.ptr, p.size);
 		struct image_palette p_data = {palette, PALETTE_TYPE_RGB_256};
-		struct image_data i_data = {copy, p_data, IMAGE_TYPE_WAL_Q2, header,
+		struct image_data i_data = {copy,
+									p_data,
+									IMAGE_TYPE_WAL_Q2,
+									header->width / (i + 1),
+									header->height / (i + 1),
+									header,
 									NULL};
 		mips[i] = i_data;
 		expected_len /= 4;
@@ -132,6 +137,7 @@ static struct ll_node *wal_dk_read(const sptr_t data, const sptr_t palette)
 		pal.size = DK_PALETTE_SIZE;
 	}
 	size_t expected_len = header->width * header->height;
+	int divisor = 1;
 	for (i = 0; i < MIP_LEVELS_DK; i++) {
 		sptr_t p = sptr_slice(data, header->offsets[i], expected_len);
 		if (SPTR_IS_NULL(p)) {
@@ -139,14 +145,24 @@ static struct ll_node *wal_dk_read(const sptr_t data, const sptr_t palette)
 		}
 		sptr_t copy = {xmalloc(p.size), p.size};
 		memcpy(copy.ptr, p.ptr, p.size);
+
 		struct image_palette p_data = {pal, PALETTE_TYPE_RGB_256};
-		struct image_data i_data = {copy, p_data, IMAGE_TYPE_WAL_DK, header,
-									NULL};
+		uint32_t width = header->width / divisor;
+		if (width == 0) {
+			width = 1;
+		}
+		uint32_t height = header->height / divisor;
+		if (height == 0) {
+			height = 1;
+		}
+		struct image_data i_data = {
+			copy, p_data, IMAGE_TYPE_WAL_DK, width, height, header, NULL};
 		mips[i] = i_data;
 		expected_len /= 4;
 		if (expected_len <= 0) {
 			expected_len = 1;
 		}
+		divisor *= 2;
 	}
 	return ll_from_array(&mips, sizeof(struct image_data), MIP_LEVELS_DK);
 err:

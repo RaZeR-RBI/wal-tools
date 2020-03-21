@@ -15,6 +15,7 @@ typedef struct sized_ptr {
 #define SPTR_NULL ((sptr_t){NULL, 0})
 #define SPTR_IS_NULL(x) (x.ptr == NULL)
 
+sptr_t sptr_xmalloc(size_t size);
 sptr_t sptr_slice(sptr_t ptr, size_t from, size_t n);
 void sptr_free(sptr_t* ptr);
 

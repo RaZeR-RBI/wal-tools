@@ -31,13 +31,13 @@
             <td class="headerValue">coverage.info</td>
             <td></td>
             <td class="headerItem">Lines:</td>
-            <td class="headerCovTableEntry">97</td>
-            <td class="headerCovTableEntry">109</td>
-            <td class="headerCovTableEntryMed">89.0 %</td>
+            <td class="headerCovTableEntry">107</td>
+            <td class="headerCovTableEntry">121</td>
+            <td class="headerCovTableEntryMed">88.4 %</td>
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2020-03-20 18:40:17</td>
+            <td class="headerValue">2020-03-21 18:14:23</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">7</td>
@@ -69,168 +69,187 @@
 <span class="lineNum">       7 </span>            : 
 <a name="8"><span class="lineNum">       8 </span>            : #define is_printable(x) (x &gt;= 0x20 &amp;&amp; x &lt;= 0x7E)</a>
 <span class="lineNum">       9 </span>            : 
-<span class="lineNum">      10 </span><span class="lineCov">         11 : static int invalid_name(const unsigned char *ptr, int nonnull)</span>
+<span class="lineNum">      10 </span><span class="lineCov">         15 : static int invalid_name(const unsigned char *ptr, int nonnull)</span>
 <span class="lineNum">      11 </span>            : {
 <span class="lineNum">      12 </span>            :         int i;
-<span class="lineNum">      13 </span><span class="lineCov">        299 :         for (i = 0; i &lt; NAME_LEN; i++) {</span>
-<span class="lineNum">      14 </span><span class="lineCov">        290 :                 if (!is_printable(*ptr) &amp;&amp; *ptr != 0) {</span>
+<span class="lineNum">      13 </span><span class="lineCov">        431 :         for (i = 0; i &lt; NAME_LEN; i++) {</span>
+<span class="lineNum">      14 </span><span class="lineCov">        418 :                 if (!is_printable(*ptr) &amp;&amp; *ptr != 0) {</span>
 <span class="lineNum">      15 </span><span class="lineCov">          1 :                         return 1;</span>
 <span class="lineNum">      16 </span>            :                 }
-<span class="lineNum">      17 </span><span class="lineCov">        289 :                 if (nonnull &amp;&amp; i == 0 &amp;&amp; *ptr == 0) {</span>
+<span class="lineNum">      17 </span><span class="lineCov">        417 :                 if (nonnull &amp;&amp; i == 0 &amp;&amp; *ptr == 0) {</span>
 <span class="lineNum">      18 </span><span class="lineCov">          1 :                         return 1;</span>
 <span class="lineNum">      19 </span>            :                 }
-<span class="lineNum">      20 </span><span class="lineCov">        288 :                 ptr++;</span>
+<span class="lineNum">      20 </span><span class="lineCov">        416 :                 ptr++;</span>
 <span class="lineNum">      21 </span>            :         }
-<span class="lineNum">      22 </span><span class="lineCov">          9 :         return 0;</span>
+<span class="lineNum">      22 </span><span class="lineCov">         13 :         return 0;</span>
 <a name="23"><span class="lineNum">      23 </span>            : }</a>
 <span class="lineNum">      24 </span>            : 
-<span class="lineNum">      25 </span><span class="lineCov">          7 : int32_t wal_get_type(const unsigned char *buffer)</span>
+<span class="lineNum">      25 </span><span class="lineCov">          9 : int32_t wal_get_type(const unsigned char *buffer)</span>
 <span class="lineNum">      26 </span>            : {
-<span class="lineNum">      27 </span><span class="lineCov">          7 :         uint8_t version = (uint8_t)(*buffer);</span>
-<span class="lineNum">      28 </span><span class="lineCov">          7 :         if (version == 3) {</span>
-<span class="lineNum">      29 </span><span class="lineCov">          3 :                 goto possibly_daikatana;</span>
-<span class="lineNum">      30 </span><span class="lineCov">          4 :         } else if (is_printable(version)) {</span>
-<span class="lineNum">      31 </span><span class="lineCov">          3 :                 goto possibly_quake2;</span>
+<span class="lineNum">      27 </span><span class="lineCov">          9 :         uint8_t version = (uint8_t)(*buffer);</span>
+<span class="lineNum">      28 </span><span class="lineCov">          9 :         if (version == 3) {</span>
+<span class="lineNum">      29 </span><span class="lineCov">          4 :                 goto possibly_daikatana;</span>
+<span class="lineNum">      30 </span><span class="lineCov">          5 :         } else if (is_printable(version)) {</span>
+<span class="lineNum">      31 </span><span class="lineCov">          4 :                 goto possibly_quake2;</span>
 <span class="lineNum">      32 </span>            :         }
 <span class="lineNum">      33 </span><span class="lineCov">          1 :         goto not_a_wal;</span>
 <span class="lineNum">      34 </span>            : 
-<span class="lineNum">      35 </span><span class="lineCov">          3 : possibly_daikatana:</span>
-<span class="lineNum">      36 </span><span class="lineCov">          5 :         if (invalid_name(buffer + offsetof(struct wal_dk_header, name), 1) ||</span>
-<span class="lineNum">      37 </span><span class="lineCov">          2 :                 invalid_name(buffer + offsetof(struct wal_dk_header, animname), 0)) {</span>
+<span class="lineNum">      35 </span><span class="lineCov">          4 : possibly_daikatana:</span>
+<span class="lineNum">      36 </span><span class="lineCov">          7 :         if (invalid_name(buffer + offsetof(struct wal_dk_header, name), 1) ||</span>
+<span class="lineNum">      37 </span><span class="lineCov">          3 :                 invalid_name(buffer + offsetof(struct wal_dk_header, animname), 0)) {</span>
 <span class="lineNum">      38 </span>            :                 goto not_a_wal;
 <span class="lineNum">      39 </span>            :         }
-<span class="lineNum">      40 </span><span class="lineCov">          2 :         return WAL_TYPE_DAIKATANA;</span>
-<span class="lineNum">      41 </span><span class="lineCov">          3 : possibly_quake2:</span>
-<span class="lineNum">      42 </span><span class="lineCov">          6 :         if (invalid_name(buffer + offsetof(struct wal_q2_header, name), 1) ||</span>
-<span class="lineNum">      43 </span><span class="lineCov">          3 :                 invalid_name(buffer + offsetof(struct wal_q2_header, animname), 0)) {</span>
+<span class="lineNum">      40 </span><span class="lineCov">          3 :         return WAL_TYPE_DAIKATANA;</span>
+<span class="lineNum">      41 </span><span class="lineCov">          4 : possibly_quake2:</span>
+<span class="lineNum">      42 </span><span class="lineCov">          8 :         if (invalid_name(buffer + offsetof(struct wal_q2_header, name), 1) ||</span>
+<span class="lineNum">      43 </span><span class="lineCov">          4 :                 invalid_name(buffer + offsetof(struct wal_q2_header, animname), 0)) {</span>
 <span class="lineNum">      44 </span>            :                 goto not_a_wal;
 <span class="lineNum">      45 </span>            :         }
-<span class="lineNum">      46 </span><span class="lineCov">          2 :         return WAL_TYPE_QUAKE2;</span>
+<span class="lineNum">      46 </span><span class="lineCov">          3 :         return WAL_TYPE_QUAKE2;</span>
 <span class="lineNum">      47 </span><span class="lineCov">          2 : not_a_wal:</span>
 <span class="lineNum">      48 </span><span class="lineCov">          3 :         return WAL_NOT_A_WAL;</span>
 <a name="49"><span class="lineNum">      49 </span>            : }</a>
 <span class="lineNum">      50 </span>            : 
-<span class="lineNum">      51 </span><span class="lineCov">          2 : unsigned char *wal_q2_read_header(const unsigned char *buffer,</span>
+<span class="lineNum">      51 </span><span class="lineCov">          3 : unsigned char *wal_q2_read_header(const unsigned char *buffer,</span>
 <span class="lineNum">      52 </span>            :                                                                   struct wal_q2_header *out)
 <span class="lineNum">      53 </span>            : {
 <span class="lineNum">      54 </span>            :         int i;
-<span class="lineNum">      55 </span><span class="lineCov">          2 :         unsigned char *ptr = (unsigned char *)buffer;</span>
-<span class="lineNum">      56 </span><span class="lineCov">          2 :         memcpy(&amp;(out-&gt;name), ptr, NAME_LEN);</span>
-<span class="lineNum">      57 </span><span class="lineCov">          2 :         ptr += NAME_LEN;</span>
-<span class="lineNum">      58 </span><span class="lineCov">          2 :         out-&gt;width = read_le32(&amp;ptr);</span>
-<span class="lineNum">      59 </span><span class="lineCov">          2 :         out-&gt;height = read_le32(&amp;ptr);</span>
-<span class="lineNum">      60 </span><span class="lineCov">         10 :         for (i = 0; i &lt; MIP_LEVELS_Q2; i++) {</span>
-<span class="lineNum">      61 </span><span class="lineCov">          8 :                 out-&gt;offsets[i] = read_le32(&amp;ptr);</span>
+<span class="lineNum">      55 </span><span class="lineCov">          3 :         unsigned char *ptr = (unsigned char *)buffer;</span>
+<span class="lineNum">      56 </span><span class="lineCov">          3 :         memcpy(&amp;(out-&gt;name), ptr, NAME_LEN);</span>
+<span class="lineNum">      57 </span><span class="lineCov">          3 :         ptr += NAME_LEN;</span>
+<span class="lineNum">      58 </span><span class="lineCov">          3 :         out-&gt;width = read_le32(&amp;ptr);</span>
+<span class="lineNum">      59 </span><span class="lineCov">          3 :         out-&gt;height = read_le32(&amp;ptr);</span>
+<span class="lineNum">      60 </span><span class="lineCov">         15 :         for (i = 0; i &lt; MIP_LEVELS_Q2; i++) {</span>
+<span class="lineNum">      61 </span><span class="lineCov">         12 :                 out-&gt;offsets[i] = read_le32(&amp;ptr);</span>
 <span class="lineNum">      62 </span>            :         }
-<span class="lineNum">      63 </span><span class="lineCov">          2 :         memcpy(&amp;(out-&gt;animname), ptr, NAME_LEN);</span>
-<span class="lineNum">      64 </span><span class="lineCov">          2 :         ptr += NAME_LEN;</span>
-<span class="lineNum">      65 </span><span class="lineCov">          2 :         out-&gt;flags = read_le32(&amp;ptr);</span>
-<span class="lineNum">      66 </span><span class="lineCov">          2 :         out-&gt;contents = read_le32(&amp;ptr);</span>
-<span class="lineNum">      67 </span><span class="lineCov">          2 :         out-&gt;value = read_le32(&amp;ptr);</span>
-<span class="lineNum">      68 </span><span class="lineCov">          2 :         return ptr;</span>
+<span class="lineNum">      63 </span><span class="lineCov">          3 :         memcpy(&amp;(out-&gt;animname), ptr, NAME_LEN);</span>
+<span class="lineNum">      64 </span><span class="lineCov">          3 :         ptr += NAME_LEN;</span>
+<span class="lineNum">      65 </span><span class="lineCov">          3 :         out-&gt;flags = read_le32(&amp;ptr);</span>
+<span class="lineNum">      66 </span><span class="lineCov">          3 :         out-&gt;contents = read_le32(&amp;ptr);</span>
+<span class="lineNum">      67 </span><span class="lineCov">          3 :         out-&gt;value = read_le32(&amp;ptr);</span>
+<span class="lineNum">      68 </span><span class="lineCov">          3 :         return ptr;</span>
 <a name="69"><span class="lineNum">      69 </span>            : }</a>
 <span class="lineNum">      70 </span>            : 
-<span class="lineNum">      71 </span><span class="lineCov">          2 : unsigned char *wal_dk_read_header(const unsigned char *buffer,</span>
+<span class="lineNum">      71 </span><span class="lineCov">          3 : unsigned char *wal_dk_read_header(const unsigned char *buffer,</span>
 <span class="lineNum">      72 </span>            :                                                                   struct wal_dk_header *out)
 <span class="lineNum">      73 </span>            : {
 <span class="lineNum">      74 </span>            :         int i;
-<span class="lineNum">      75 </span><span class="lineCov">          2 :         unsigned char *ptr = (unsigned char *)(buffer + 4);</span>
-<span class="lineNum">      76 </span><span class="lineCov">          2 :         memcpy(&amp;(out-&gt;name), ptr, NAME_LEN);</span>
-<span class="lineNum">      77 </span><span class="lineCov">          2 :         ptr += NAME_LEN;</span>
-<span class="lineNum">      78 </span><span class="lineCov">          2 :         out-&gt;width = read_le32(&amp;ptr);</span>
-<span class="lineNum">      79 </span><span class="lineCov">          2 :         out-&gt;height = read_le32(&amp;ptr);</span>
-<span class="lineNum">      80 </span><span class="lineCov">         20 :         for (i = 0; i &lt; MIP_LEVELS_DK; i++) {</span>
-<span class="lineNum">      81 </span><span class="lineCov">         18 :                 out-&gt;offsets[i] = read_le32(&amp;ptr);</span>
+<span class="lineNum">      75 </span><span class="lineCov">          3 :         unsigned char *ptr = (unsigned char *)(buffer + 4);</span>
+<span class="lineNum">      76 </span><span class="lineCov">          3 :         memcpy(&amp;(out-&gt;name), ptr, NAME_LEN);</span>
+<span class="lineNum">      77 </span><span class="lineCov">          3 :         ptr += NAME_LEN;</span>
+<span class="lineNum">      78 </span><span class="lineCov">          3 :         out-&gt;width = read_le32(&amp;ptr);</span>
+<span class="lineNum">      79 </span><span class="lineCov">          3 :         out-&gt;height = read_le32(&amp;ptr);</span>
+<span class="lineNum">      80 </span><span class="lineCov">         30 :         for (i = 0; i &lt; MIP_LEVELS_DK; i++) {</span>
+<span class="lineNum">      81 </span><span class="lineCov">         27 :                 out-&gt;offsets[i] = read_le32(&amp;ptr);</span>
 <span class="lineNum">      82 </span>            :         }
-<span class="lineNum">      83 </span><span class="lineCov">          2 :         memcpy(&amp;(out-&gt;animname), ptr, NAME_LEN);</span>
-<span class="lineNum">      84 </span><span class="lineCov">          2 :         ptr += NAME_LEN;</span>
-<span class="lineNum">      85 </span><span class="lineCov">          2 :         out-&gt;flags = read_le32(&amp;ptr);</span>
-<span class="lineNum">      86 </span><span class="lineCov">          2 :         out-&gt;contents = read_le32(&amp;ptr);</span>
-<span class="lineNum">      87 </span><span class="lineCov">          2 :         memcpy(&amp;(out-&gt;palette), ptr, DK_PALETTE_SIZE);</span>
-<span class="lineNum">      88 </span><span class="lineCov">          2 :         ptr += DK_PALETTE_SIZE;</span>
-<span class="lineNum">      89 </span><span class="lineCov">          2 :         out-&gt;value = read_le32(&amp;ptr);</span>
-<span class="lineNum">      90 </span><span class="lineCov">          2 :         return ptr;</span>
+<span class="lineNum">      83 </span><span class="lineCov">          3 :         memcpy(&amp;(out-&gt;animname), ptr, NAME_LEN);</span>
+<span class="lineNum">      84 </span><span class="lineCov">          3 :         ptr += NAME_LEN;</span>
+<span class="lineNum">      85 </span><span class="lineCov">          3 :         out-&gt;flags = read_le32(&amp;ptr);</span>
+<span class="lineNum">      86 </span><span class="lineCov">          3 :         out-&gt;contents = read_le32(&amp;ptr);</span>
+<span class="lineNum">      87 </span><span class="lineCov">          3 :         memcpy(&amp;(out-&gt;palette), ptr, DK_PALETTE_SIZE);</span>
+<span class="lineNum">      88 </span><span class="lineCov">          3 :         ptr += DK_PALETTE_SIZE;</span>
+<span class="lineNum">      89 </span><span class="lineCov">          3 :         out-&gt;value = read_le32(&amp;ptr);</span>
+<span class="lineNum">      90 </span><span class="lineCov">          3 :         return ptr;</span>
 <a name="91"><span class="lineNum">      91 </span>            : }</a>
 <span class="lineNum">      92 </span>            : 
-<span class="lineNum">      93 </span><span class="lineCov">          1 : static struct ll_node *wal_q2_read(const sptr_t data, const sptr_t palette)</span>
+<span class="lineNum">      93 </span><span class="lineCov">          2 : static struct ll_node *wal_q2_read(const sptr_t data, const sptr_t palette)</span>
 <span class="lineNum">      94 </span>            : {
 <span class="lineNum">      95 </span>            :         int i;
 <span class="lineNum">      96 </span>            :         struct image_data mips[MIP_LEVELS_Q2];
-<span class="lineNum">      97 </span><span class="lineCov">          1 :         struct wal_q2_header *header = xmalloc(sizeof(struct wal_q2_header));</span>
-<span class="lineNum">      98 </span><span class="lineCov">          1 :         wal_q2_read_header(data.ptr, header);</span>
-<span class="lineNum">      99 </span><span class="lineCov">          1 :         size_t expected_len = header-&gt;width * header-&gt;height;</span>
-<span class="lineNum">     100 </span><span class="lineCov">          5 :         for (i = 0; i &lt; MIP_LEVELS_Q2; i++) {</span>
-<span class="lineNum">     101 </span><span class="lineCov">          4 :                 sptr_t p = sptr_slice(data, header-&gt;offsets[i], expected_len);</span>
-<span class="lineNum">     102 </span><span class="lineCov">          4 :                 if (SPTR_IS_NULL(p)) {</span>
+<span class="lineNum">      97 </span><span class="lineCov">          2 :         struct wal_q2_header *header = xmalloc(sizeof(struct wal_q2_header));</span>
+<span class="lineNum">      98 </span><span class="lineCov">          2 :         wal_q2_read_header(data.ptr, header);</span>
+<span class="lineNum">      99 </span><span class="lineCov">          2 :         size_t expected_len = header-&gt;width * header-&gt;height;</span>
+<span class="lineNum">     100 </span><span class="lineCov">         10 :         for (i = 0; i &lt; MIP_LEVELS_Q2; i++) {</span>
+<span class="lineNum">     101 </span><span class="lineCov">          8 :                 sptr_t p = sptr_slice(data, header-&gt;offsets[i], expected_len);</span>
+<span class="lineNum">     102 </span><span class="lineCov">          8 :                 if (SPTR_IS_NULL(p)) {</span>
 <span class="lineNum">     103 </span><span class="lineNoCov">          0 :                         goto err;</span>
 <span class="lineNum">     104 </span>            :                 }
-<span class="lineNum">     105 </span><span class="lineCov">          4 :                 sptr_t copy = {xmalloc(p.size), p.size};</span>
-<span class="lineNum">     106 </span><span class="lineCov">          4 :                 memcpy(copy.ptr, p.ptr, p.size);</span>
-<span class="lineNum">     107 </span><span class="lineCov">          4 :                 struct image_palette p_data = {palette, PALETTE_TYPE_RGB_256};</span>
-<span class="lineNum">     108 </span><span class="lineCov">          4 :                 struct image_data i_data = {copy, p_data, IMAGE_TYPE_WAL_Q2, header,</span>
-<span class="lineNum">     109 </span>            :                                                                         NULL};
-<span class="lineNum">     110 </span><span class="lineCov">          4 :                 mips[i] = i_data;</span>
-<span class="lineNum">     111 </span><span class="lineCov">          4 :                 expected_len /= 4;</span>
-<span class="lineNum">     112 </span><span class="lineCov">          4 :                 if (expected_len &lt;= 0) {</span>
-<span class="lineNum">     113 </span><span class="lineNoCov">          0 :                         expected_len = 1;</span>
-<span class="lineNum">     114 </span>            :                 }
-<span class="lineNum">     115 </span>            :         }
-<span class="lineNum">     116 </span><span class="lineCov">          1 :         return ll_from_array(&amp;mips, sizeof(struct image_data), MIP_LEVELS_Q2);</span>
-<span class="lineNum">     117 </span><span class="lineNoCov">          0 : err:</span>
-<span class="lineNum">     118 </span><span class="lineNoCov">          0 :         free(header);</span>
-<span class="lineNum">     119 </span><span class="lineNoCov">          0 :         return NULL;</span>
-<a name="120"><span class="lineNum">     120 </span>            : }</a>
-<span class="lineNum">     121 </span>            : 
-<span class="lineNum">     122 </span><span class="lineCov">          1 : static struct ll_node *wal_dk_read(const sptr_t data, const sptr_t palette)</span>
-<span class="lineNum">     123 </span>            : {
-<span class="lineNum">     124 </span>            :         int i;
-<span class="lineNum">     125 </span>            :         struct image_data mips[MIP_LEVELS_DK];
-<span class="lineNum">     126 </span><span class="lineCov">          1 :         struct wal_dk_header *header = xmalloc(sizeof(struct wal_dk_header));</span>
-<span class="lineNum">     127 </span><span class="lineCov">          1 :         wal_dk_read_header(data.ptr, header);</span>
-<span class="lineNum">     128 </span>            : 
-<span class="lineNum">     129 </span><span class="lineCov">          1 :         sptr_t pal = palette;</span>
-<span class="lineNum">     130 </span><span class="lineCov">          1 :         if (SPTR_IS_NULL(pal)) {</span>
-<span class="lineNum">     131 </span><span class="lineCov">          1 :                 pal.ptr = &amp;header-&gt;palette[0];</span>
-<span class="lineNum">     132 </span><span class="lineCov">          1 :                 pal.size = DK_PALETTE_SIZE;</span>
-<span class="lineNum">     133 </span>            :         }
-<span class="lineNum">     134 </span><span class="lineCov">          1 :         size_t expected_len = header-&gt;width * header-&gt;height;</span>
-<span class="lineNum">     135 </span><span class="lineCov">         10 :         for (i = 0; i &lt; MIP_LEVELS_DK; i++) {</span>
-<span class="lineNum">     136 </span><span class="lineCov">          9 :                 sptr_t p = sptr_slice(data, header-&gt;offsets[i], expected_len);</span>
-<span class="lineNum">     137 </span><span class="lineCov">          9 :                 if (SPTR_IS_NULL(p)) {</span>
-<span class="lineNum">     138 </span><span class="lineNoCov">          0 :                         goto err;</span>
-<span class="lineNum">     139 </span>            :                 }
-<span class="lineNum">     140 </span><span class="lineCov">          9 :                 sptr_t copy = {xmalloc(p.size), p.size};</span>
-<span class="lineNum">     141 </span><span class="lineCov">          9 :                 memcpy(copy.ptr, p.ptr, p.size);</span>
-<span class="lineNum">     142 </span><span class="lineCov">          9 :                 struct image_palette p_data = {pal, PALETTE_TYPE_RGB_256};</span>
-<span class="lineNum">     143 </span><span class="lineCov">          9 :                 struct image_data i_data = {copy, p_data, IMAGE_TYPE_WAL_DK, header,</span>
-<span class="lineNum">     144 </span>            :                                                                         NULL};
-<span class="lineNum">     145 </span><span class="lineCov">          9 :                 mips[i] = i_data;</span>
-<span class="lineNum">     146 </span><span class="lineCov">          9 :                 expected_len /= 4;</span>
-<span class="lineNum">     147 </span><span class="lineCov">          9 :                 if (expected_len &lt;= 0) {</span>
-<span class="lineNum">     148 </span><span class="lineCov">          2 :                         expected_len = 1;</span>
-<span class="lineNum">     149 </span>            :                 }
-<span class="lineNum">     150 </span>            :         }
-<span class="lineNum">     151 </span><span class="lineCov">          1 :         return ll_from_array(&amp;mips, sizeof(struct image_data), MIP_LEVELS_DK);</span>
-<span class="lineNum">     152 </span><span class="lineNoCov">          0 : err:</span>
-<span class="lineNum">     153 </span><span class="lineNoCov">          0 :         free(header);</span>
-<span class="lineNum">     154 </span><span class="lineNoCov">          0 :         return NULL;</span>
-<a name="155"><span class="lineNum">     155 </span>            : }</a>
-<span class="lineNum">     156 </span>            : 
-<span class="lineNum">     157 </span><span class="lineCov">          2 : struct ll_node *wal_read(const sptr_t data, const sptr_t palette)</span>
-<span class="lineNum">     158 </span>            : {
-<span class="lineNum">     159 </span>            :         /* Daikatana header is bigger */
-<span class="lineNum">     160 </span><span class="lineCov">          2 :         if (data.size &lt; WAL_DK_HEADER_SIZE) {</span>
-<span class="lineNum">     161 </span><span class="lineNoCov">          0 :                 return NULL;</span>
-<span class="lineNum">     162 </span>            :         }
-<span class="lineNum">     163 </span><span class="lineCov">          2 :         switch (wal_get_type(data.ptr)) {</span>
-<span class="lineNum">     164 </span><span class="lineCov">          1 :                 case WAL_TYPE_QUAKE2:</span>
-<span class="lineNum">     165 </span><span class="lineCov">          1 :                         return wal_q2_read(data, palette);</span>
-<span class="lineNum">     166 </span><span class="lineCov">          1 :                 case WAL_TYPE_DAIKATANA:</span>
-<span class="lineNum">     167 </span><span class="lineCov">          1 :                         return wal_dk_read(data, palette);</span>
-<span class="lineNum">     168 </span><span class="lineNoCov">          0 :                 default:</span>
-<span class="lineNum">     169 </span><span class="lineNoCov">          0 :                         return NULL;</span>
-<span class="lineNum">     170 </span>            :         }
-<span class="lineNum">     171 </span>            : }
+<span class="lineNum">     105 </span><span class="lineCov">          8 :                 sptr_t copy = {xmalloc(p.size), p.size};</span>
+<span class="lineNum">     106 </span><span class="lineCov">          8 :                 memcpy(copy.ptr, p.ptr, p.size);</span>
+<span class="lineNum">     107 </span><span class="lineCov">          8 :                 struct image_palette p_data = {palette, PALETTE_TYPE_RGB_256};</span>
+<span class="lineNum">     108 </span><span class="lineCov">         24 :                 struct image_data i_data = {copy,</span>
+<span class="lineNum">     109 </span>            :                                                                         p_data,
+<span class="lineNum">     110 </span>            :                                                                         IMAGE_TYPE_WAL_Q2,
+<span class="lineNum">     111 </span><span class="lineCov">          8 :                                                                         header-&gt;width / (i + 1),</span>
+<span class="lineNum">     112 </span><span class="lineCov">          8 :                                                                         header-&gt;height / (i + 1),</span>
+<span class="lineNum">     113 </span>            :                                                                         header,
+<span class="lineNum">     114 </span>            :                                                                         NULL};
+<span class="lineNum">     115 </span><span class="lineCov">          8 :                 mips[i] = i_data;</span>
+<span class="lineNum">     116 </span><span class="lineCov">          8 :                 expected_len /= 4;</span>
+<span class="lineNum">     117 </span><span class="lineCov">          8 :                 if (expected_len &lt;= 0) {</span>
+<span class="lineNum">     118 </span><span class="lineNoCov">          0 :                         expected_len = 1;</span>
+<span class="lineNum">     119 </span>            :                 }
+<span class="lineNum">     120 </span>            :         }
+<span class="lineNum">     121 </span><span class="lineCov">          2 :         return ll_from_array(&amp;mips, sizeof(struct image_data), MIP_LEVELS_Q2);</span>
+<span class="lineNum">     122 </span><span class="lineNoCov">          0 : err:</span>
+<span class="lineNum">     123 </span><span class="lineNoCov">          0 :         free(header);</span>
+<span class="lineNum">     124 </span><span class="lineNoCov">          0 :         return NULL;</span>
+<a name="125"><span class="lineNum">     125 </span>            : }</a>
+<span class="lineNum">     126 </span>            : 
+<span class="lineNum">     127 </span><span class="lineCov">          2 : static struct ll_node *wal_dk_read(const sptr_t data, const sptr_t palette)</span>
+<span class="lineNum">     128 </span>            : {
+<span class="lineNum">     129 </span>            :         int i;
+<span class="lineNum">     130 </span>            :         struct image_data mips[MIP_LEVELS_DK];
+<span class="lineNum">     131 </span><span class="lineCov">          2 :         struct wal_dk_header *header = xmalloc(sizeof(struct wal_dk_header));</span>
+<span class="lineNum">     132 </span><span class="lineCov">          2 :         wal_dk_read_header(data.ptr, header);</span>
+<span class="lineNum">     133 </span>            : 
+<span class="lineNum">     134 </span><span class="lineCov">          2 :         sptr_t pal = palette;</span>
+<span class="lineNum">     135 </span><span class="lineCov">          2 :         if (SPTR_IS_NULL(pal)) {</span>
+<span class="lineNum">     136 </span><span class="lineCov">          2 :                 pal.ptr = &amp;header-&gt;palette[0];</span>
+<span class="lineNum">     137 </span><span class="lineCov">          2 :                 pal.size = DK_PALETTE_SIZE;</span>
+<span class="lineNum">     138 </span>            :         }
+<span class="lineNum">     139 </span><span class="lineCov">          2 :         size_t expected_len = header-&gt;width * header-&gt;height;</span>
+<span class="lineNum">     140 </span><span class="lineCov">          2 :         int divisor = 1;</span>
+<span class="lineNum">     141 </span><span class="lineCov">         20 :         for (i = 0; i &lt; MIP_LEVELS_DK; i++) {</span>
+<span class="lineNum">     142 </span><span class="lineCov">         18 :                 sptr_t p = sptr_slice(data, header-&gt;offsets[i], expected_len);</span>
+<span class="lineNum">     143 </span><span class="lineCov">         18 :                 if (SPTR_IS_NULL(p)) {</span>
+<span class="lineNum">     144 </span><span class="lineNoCov">          0 :                         goto err;</span>
+<span class="lineNum">     145 </span>            :                 }
+<span class="lineNum">     146 </span><span class="lineCov">         18 :                 sptr_t copy = {xmalloc(p.size), p.size};</span>
+<span class="lineNum">     147 </span><span class="lineCov">         18 :                 memcpy(copy.ptr, p.ptr, p.size);</span>
+<span class="lineNum">     148 </span>            : 
+<span class="lineNum">     149 </span><span class="lineCov">         18 :                 struct image_palette p_data = {pal, PALETTE_TYPE_RGB_256};</span>
+<span class="lineNum">     150 </span><span class="lineCov">         18 :                 uint32_t width = header-&gt;width / divisor;</span>
+<span class="lineNum">     151 </span><span class="lineCov">         18 :                 if (width == 0) {</span>
+<span class="lineNum">     152 </span><span class="lineCov">          2 :                         width = 1;</span>
+<span class="lineNum">     153 </span>            :                 }
+<span class="lineNum">     154 </span><span class="lineCov">         18 :                 uint32_t height = header-&gt;height / divisor;</span>
+<span class="lineNum">     155 </span><span class="lineCov">         18 :                 if (height == 0) {</span>
+<span class="lineNum">     156 </span><span class="lineNoCov">          0 :                         height = 1;</span>
+<span class="lineNum">     157 </span>            :                 }
+<span class="lineNum">     158 </span><span class="lineCov">         18 :                 struct image_data i_data = {</span>
+<span class="lineNum">     159 </span>            :                         copy, p_data, IMAGE_TYPE_WAL_DK, width, height, header, NULL};
+<span class="lineNum">     160 </span><span class="lineCov">         18 :                 mips[i] = i_data;</span>
+<span class="lineNum">     161 </span><span class="lineCov">         18 :                 expected_len /= 4;</span>
+<span class="lineNum">     162 </span><span class="lineCov">         18 :                 if (expected_len &lt;= 0) {</span>
+<span class="lineNum">     163 </span><span class="lineCov">          4 :                         expected_len = 1;</span>
+<span class="lineNum">     164 </span>            :                 }
+<span class="lineNum">     165 </span><span class="lineCov">         18 :                 divisor *= 2;</span>
+<span class="lineNum">     166 </span>            :         }
+<span class="lineNum">     167 </span><span class="lineCov">          2 :         return ll_from_array(&amp;mips, sizeof(struct image_data), MIP_LEVELS_DK);</span>
+<span class="lineNum">     168 </span><span class="lineNoCov">          0 : err:</span>
+<span class="lineNum">     169 </span><span class="lineNoCov">          0 :         free(header);</span>
+<span class="lineNum">     170 </span><span class="lineNoCov">          0 :         return NULL;</span>
+<a name="171"><span class="lineNum">     171 </span>            : }</a>
+<span class="lineNum">     172 </span>            : 
+<span class="lineNum">     173 </span><span class="lineCov">          4 : struct ll_node *wal_read(const sptr_t data, const sptr_t palette)</span>
+<span class="lineNum">     174 </span>            : {
+<span class="lineNum">     175 </span><span class="lineCov">          4 :         if (SPTR_IS_NULL(data)) {</span>
+<span class="lineNum">     176 </span><span class="lineNoCov">          0 :                 return NULL;</span>
+<span class="lineNum">     177 </span>            :         }
+<span class="lineNum">     178 </span>            :         /* Daikatana header is bigger */
+<span class="lineNum">     179 </span><span class="lineCov">          4 :         if (data.size &lt; WAL_DK_HEADER_SIZE) {</span>
+<span class="lineNum">     180 </span><span class="lineNoCov">          0 :                 return NULL;</span>
+<span class="lineNum">     181 </span>            :         }
+<span class="lineNum">     182 </span><span class="lineCov">          4 :         switch (wal_get_type(data.ptr)) {</span>
+<span class="lineNum">     183 </span><span class="lineCov">          2 :                 case WAL_TYPE_QUAKE2:</span>
+<span class="lineNum">     184 </span><span class="lineCov">          2 :                         return wal_q2_read(data, palette);</span>
+<span class="lineNum">     185 </span><span class="lineCov">          2 :                 case WAL_TYPE_DAIKATANA:</span>
+<span class="lineNum">     186 </span><span class="lineCov">          2 :                         return wal_dk_read(data, palette);</span>
+<span class="lineNum">     187 </span><span class="lineNoCov">          0 :                 default:</span>
+<span class="lineNum">     188 </span><span class="lineNoCov">          0 :                         return NULL;</span>
+<span class="lineNum">     189 </span>            :         }
+<span class="lineNum">     190 </span>            : }
 </pre>
       </td>
     </tr>

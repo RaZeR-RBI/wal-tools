@@ -3,6 +3,8 @@
 
 #include <stdint.h>
 
+#include "image.h"
+
 enum tga_color_map { TGA_COLOR_MAP_NONE = 0x0, TGA_COLOR_MAP_PRESENT = 0x1 };
 enum tga_image_type {
 	TGA_IMAGE_TYPE_NO_IMAGE = 0x0,
@@ -43,5 +45,10 @@ struct tga_header {
 	uint8_t im_origin : 2;
 	uint8_t im_alpha_bits : 4;
 };
+
+#define TGA_HEADER_SIZE 18
+
+size_t tga_estimate_size(struct image_data image);
+sptr_t tga_write(sptr_t buf, struct image_data image);
 
 #endif /* _TGA_H */

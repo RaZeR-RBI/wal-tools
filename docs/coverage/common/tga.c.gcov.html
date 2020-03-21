@@ -1,0 +1,146 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>LCOV - coverage.info - common/tga.c</title>
+  <link rel="stylesheet" type="text/css" href="../gcov.css">
+</head>
+
+<body>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="title">LCOV - code coverage report</td></tr>
+    <tr><td class="ruler"><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+
+    <tr>
+      <td width="100%">
+        <table cellpadding=1 border=0 width="100%">
+          <tr>
+            <td width="10%" class="headerItem">Current view:</td>
+            <td width="35%" class="headerValue"><a href="../index.html">top level</a> - <a href="index.html">common</a> - tga.c<span style="font-size: 80%;"> (source / <a href="tga.c.func-sort-c.html">functions</a>)</span></td>
+            <td width="5%"></td>
+            <td width="15%"></td>
+            <td width="10%" class="headerCovTableHead">Hit</td>
+            <td width="10%" class="headerCovTableHead">Total</td>
+            <td width="15%" class="headerCovTableHead">Coverage</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test:</td>
+            <td class="headerValue">coverage.info</td>
+            <td></td>
+            <td class="headerItem">Lines:</td>
+            <td class="headerCovTableEntry">39</td>
+            <td class="headerCovTableEntry">42</td>
+            <td class="headerCovTableEntryHi">92.9 %</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Date:</td>
+            <td class="headerValue">2020-03-21 18:14:23</td>
+            <td></td>
+            <td class="headerItem">Functions:</td>
+            <td class="headerCovTableEntry">4</td>
+            <td class="headerCovTableEntry">4</td>
+            <td class="headerCovTableEntryHi">100.0 %</td>
+          </tr>
+          <tr><td><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+        </table>
+      </td>
+    </tr>
+
+    <tr><td class="ruler"><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+  </table>
+
+  <table cellpadding=0 cellspacing=0 border=0>
+    <tr>
+      <td><br></td>
+    </tr>
+    <tr>
+      <td>
+<pre class="sourceHeading">          Line data    Source code</pre>
+<pre class="source">
+<a name="1"><span class="lineNum">       1 </span>            : #include &quot;tga.h&quot;</a>
+<span class="lineNum">       2 </span>            : #include &quot;endian-util.h&quot;
+<span class="lineNum">       3 </span>            : 
+<span class="lineNum">       4 </span>            : #include &lt;stdio.h&gt;
+<a name="5"><span class="lineNum">       5 </span>            : #include &lt;string.h&gt;</a>
+<span class="lineNum">       6 </span>            : 
+<span class="lineNum">       7 </span><span class="lineCov">         26 : static int is_supported(struct image_data image)</span>
+<span class="lineNum">       8 </span>            : {
+<span class="lineNum">       9 </span>            :         // Note: we're supporting only 256-color indexed images
+<span class="lineNum">      10 </span><span class="lineCov">         52 :         if ((image.type != IMAGE_TYPE_WAL_Q2 &amp;&amp; image.type != IMAGE_TYPE_WAL_DK) ||</span>
+<span class="lineNum">      11 </span><span class="lineCov">         52 :                 SPTR_IS_NULL(image.palette.data) ||</span>
+<span class="lineNum">      12 </span><span class="lineCov">         26 :                 image.palette.type != PALETTE_TYPE_RGB_256) {</span>
+<span class="lineNum">      13 </span><span class="lineNoCov">          0 :                 return 0;</span>
+<span class="lineNum">      14 </span>            :         }
+<span class="lineNum">      15 </span><span class="lineCov">         26 :         return 1;</span>
+<a name="16"><span class="lineNum">      16 </span>            : }</a>
+<span class="lineNum">      17 </span>            : 
+<span class="lineNum">      18 </span><span class="lineCov">         26 : size_t tga_estimate_size(struct image_data image)</span>
+<span class="lineNum">      19 </span>            : {
+<span class="lineNum">      20 </span><span class="lineCov">         26 :         if (!is_supported(image)) {</span>
+<span class="lineNum">      21 </span><span class="lineNoCov">          0 :                 return 0;</span>
+<span class="lineNum">      22 </span>            :         }
+<span class="lineNum">      23 </span><span class="lineCov">         26 :         return TGA_HEADER_SIZE + image.pixels.size + 768;</span>
+<a name="24"><span class="lineNum">      24 </span>            : }</a>
+<span class="lineNum">      25 </span>            : 
+<span class="lineNum">      26 </span><span class="lineCov">         13 : static sptr_t tga_write_header(sptr_t buf, struct image_data image)</span>
+<span class="lineNum">      27 </span>            : {
+<span class="lineNum">      28 </span>            :         (void)image;
+<span class="lineNum">      29 </span><span class="lineCov">         13 :         unsigned char *p = buf.ptr;</span>
+<span class="lineNum">      30 </span><span class="lineCov">         13 :         *p = 0;</span>
+<span class="lineNum">      31 </span><span class="lineCov">         13 :         p++;</span>
+<span class="lineNum">      32 </span><span class="lineCov">         13 :         *p = TGA_COLOR_MAP_PRESENT;</span>
+<span class="lineNum">      33 </span><span class="lineCov">         13 :         p++;</span>
+<span class="lineNum">      34 </span><span class="lineCov">         13 :         *p = TGA_IMAGE_TYPE_UNCOMPRESSED_COLOR_MAPPED;</span>
+<span class="lineNum">      35 </span><span class="lineCov">         13 :         p++;</span>
+<span class="lineNum">      36 </span>            : 
+<span class="lineNum">      37 </span><span class="lineCov">         13 :         write_le16(0, &amp;p);</span>
+<span class="lineNum">      38 </span><span class="lineCov">         13 :         write_le16(256, &amp;p);</span>
+<span class="lineNum">      39 </span><span class="lineCov">         13 :         *p = 24;</span>
+<span class="lineNum">      40 </span><span class="lineCov">         13 :         p++;</span>
+<span class="lineNum">      41 </span>            : 
+<span class="lineNum">      42 </span><span class="lineCov">         13 :         write_le16(0, &amp;p);</span>
+<span class="lineNum">      43 </span><span class="lineCov">         13 :         write_le16(0, &amp;p);</span>
+<span class="lineNum">      44 </span><span class="lineCov">         13 :         write_le16(image.width, &amp;p);</span>
+<span class="lineNum">      45 </span><span class="lineCov">         13 :         write_le16(image.height, &amp;p);</span>
+<span class="lineNum">      46 </span><span class="lineCov">         13 :         *p = 8;</span>
+<span class="lineNum">      47 </span><span class="lineCov">         13 :         p++;</span>
+<span class="lineNum">      48 </span><span class="lineCov">         13 :         *p = TGA_IM_DESCRIPTOR(TGA_IMAGE_ORIGIN_TOP_LEFT, 0);</span>
+<span class="lineNum">      49 </span><span class="lineCov">         13 :         p++;</span>
+<span class="lineNum">      50 </span><span class="lineCov">         13 :         return (sptr_t){buf.ptr + TGA_HEADER_SIZE, (buf.size - TGA_HEADER_SIZE)};</span>
+<a name="51"><span class="lineNum">      51 </span>            : }</a>
+<span class="lineNum">      52 </span>            : 
+<span class="lineNum">      53 </span><span class="lineCov">         13 : sptr_t tga_write(sptr_t buf, struct image_data image)</span>
+<span class="lineNum">      54 </span>            : {
+<span class="lineNum">      55 </span><span class="lineCov">         13 :         size_t size = tga_estimate_size(image);</span>
+<span class="lineNum">      56 </span><span class="lineCov">         13 :         if (size == 0 || buf.size &lt; size) {</span>
+<span class="lineNum">      57 </span><span class="lineNoCov">          0 :                 return SPTR_NULL;</span>
+<span class="lineNum">      58 </span>            :         }
+<span class="lineNum">      59 </span><span class="lineCov">         13 :         memset(buf.ptr, 0, buf.size);</span>
+<span class="lineNum">      60 </span><span class="lineCov">         13 :         sptr_t cm_offset = tga_write_header(buf, image);</span>
+<span class="lineNum">      61 </span>            :         /* copy palette data */
+<span class="lineNum">      62 </span><span class="lineCov">         13 :         memcpy(cm_offset.ptr, image.palette.data.ptr, image.palette.data.size);</span>
+<span class="lineNum">      63 </span>            :         /* flip from RGB to BGR in place */
+<span class="lineNum">      64 </span><span class="lineCov">         13 :         sptr_t cm_palette = sptr_slice(cm_offset, 0, image.palette.data.size);</span>
+<span class="lineNum">      65 </span><span class="lineCov">         13 :         flip_bgr(cm_palette);</span>
+<span class="lineNum">      66 </span>            :         /* copy pixel data */
+<span class="lineNum">      67 </span><span class="lineCov">         13 :         memcpy(cm_offset.ptr + image.palette.data.size, image.pixels.ptr,</span>
+<span class="lineNum">      68 </span>            :                    image.pixels.size);
+<span class="lineNum">      69 </span><span class="lineCov">         13 :         return buf;</span>
+<span class="lineNum">      70 </span>            : }
+</pre>
+      </td>
+    </tr>
+  </table>
+  <br>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="ruler"><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+    <tr><td class="versionInfo">Generated by: <a href="http://ltp.sourceforge.net/coverage/lcov.php" target="_parent">LCOV version 1.11</a></td></tr>
+  </table>
+  <br>
+
+</body>
+</html>

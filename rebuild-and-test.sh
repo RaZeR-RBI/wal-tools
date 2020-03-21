@@ -9,6 +9,7 @@ set +e
 TESTS_OK="true"
 
 cd tests
+rm out.*
 for file in *.out*
 do
 	echo "[====================] $file"
