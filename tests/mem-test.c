@@ -30,10 +30,21 @@ void test_sptr_slice(void **state)
 	assert_true(SPTR_IS_NULL(sptr_slice(p, 42, 1337)));
 }
 
+void test_xstrdup(void **state)
+{
+	(void)state;
+	unsigned char *s1 = "Hello, world!";
+	unsigned char *s2 = xstrdup(s1);
+	assert_non_null(s2);
+	assert_string_equal(s1, s2);
+	assert_ptr_not_equal(s1, s2);
+}
+
 int main(void)
 {
 	const struct CMUnitTest tests[] = {
 		cmocka_unit_test(test_sptr_slice),
+		cmocka_unit_test(test_xstrdup),
 	};
 	return cmocka_run_group_tests(tests, NULL, NULL);
 }

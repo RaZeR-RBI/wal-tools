@@ -31,11 +31,24 @@ void test_write(void **state)
 	assert_memory_equal(data.ptr, data_read.ptr, data.size);
 }
 
+void test_invalid_calls(void **state)
+{
+	(void)state;
+	char *sample_data = "Hello, world";
+	sptr_t data = (sptr_t){&sample_data, strlen(sample_data) + 1};
+	sptr_t read_non_existing = file_read("zzzzzzzzzzzzzzzzzzz", "r");
+	assert_true(SPTR_IS_NULL(read_non_existing));
+
+	int result = file_write(data, "out.xxx", "r");
+	assert_false(result);
+}
+
 int main(void)
 {
 	const struct CMUnitTest tests[] = {
 		cmocka_unit_test(test_read),
 		cmocka_unit_test(test_write),
+		cmocka_unit_test(test_invalid_calls),
 	};
 	return cmocka_run_group_tests(tests, NULL, NULL);
 }
