@@ -50,6 +50,18 @@ $(WAL_INFO_OBJ): %.o : %.c
 $(WAL_INFO_EXE): $(WAL_INFO_OBJ) $(COMMON_OBJ)
 	$(CC) $(CFLAGS) $(WAL_INFO_OBJ) $(COMMON_OBJ) -o $@
 
+
+
+WAL_EXPORT_EXE = $(BUILD_DIR)/wal-export$(EXEEXT)
+WAL_EXPORT_SRC = src/wal-export/wal-export.c
+WAL_EXPORT_OBJ = $(patsubst %.c, %.o, $(WAL_EXPORT_SRC))
+
+$(WAL_EXPORT_OBJ): %.o : %.c
+	$(CC) $(CFLAGS) -std=$(C_VERSION) -c $< -o $@
+
+$(WAL_EXPORT_EXE): $(WAL_EXPORT_OBJ) $(COMMON_OBJ)
+	$(CC) $(CFLAGS) $(WAL_EXPORT_OBJ) $(COMMON_OBJ) -o $@
+
 # ------------------------------------------------------------------------------
 # Tests
 TESTS_SRC = $(wildcard tests/*.c)
@@ -62,7 +74,7 @@ $(TESTS_EXE): %.out : %.o
 	$(CC) $(LDFLAGS) -lcmocka $< $(COMMON_OBJ) -o $@
 
 # ------------------------------------------------------------------------------
-all: $(WAL_INFO_EXE)
+all: $(WAL_INFO_EXE) $(WAL_EXPORT_EXE)
 tests: $(COMMON_OBJ) $(TESTS_EXE)
 clean:
 	-rm -f $(COMMON_OBJ)

@@ -16,6 +16,15 @@ void *xmalloc(size_t size)
 	return result;
 }
 
+char *xstrdup(const char *s)
+{
+	size_t size = strlen(s);
+	char *result = xmalloc(size + 1);
+	memcpy(result, s, size);
+	*(result + size) = '\0';
+	return result;
+}
+
 sptr_t sptr_xmalloc(size_t size)
 {
 	unsigned char *p = xmalloc(size);
