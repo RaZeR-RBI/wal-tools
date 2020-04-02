@@ -139,6 +139,9 @@ int main(int argc, const char *argv[])
 			set_number(&h_dk->contents, contents, o_contents);
 			set_number(&h_dk->value, value, o_value);
 			break;
+		default:
+			fprintf(stderr, "Not a WAL file\n");
+			return 3;
 	}
 
 	file_write(src, o_path->values->value_ptr, "w");
