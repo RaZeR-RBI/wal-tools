@@ -16,7 +16,7 @@ struct image_palette {
 	uint8_t type;
 };
 
-struct image_data {
+typedef struct image_data {
 	sptr_t pixels;
 	struct image_palette palette;
 	uint8_t type; /* image_type */
@@ -24,8 +24,14 @@ struct image_data {
 	uint32_t height;
 	void *header; /* pointer to original header struct */
 	void *userdata;
-};
+} image_data_t;
 
 void flip_bgr(sptr_t colors);
+
+struct rgb {
+	uint8_t r, g, b;
+};
+
+#define RGB_BLACK ((struct rgb){ 0, 0, 0 })
 
 #endif /* _IMAGE_H */

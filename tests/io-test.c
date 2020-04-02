@@ -35,7 +35,8 @@ void test_invalid_calls(void **state)
 {
 	(void)state;
 	char *sample_data = "Hello, world";
-	sptr_t data = (sptr_t){&sample_data, strlen(sample_data) + 1};
+	sptr_t data =
+		(sptr_t){(unsigned char *)&sample_data, strlen(sample_data) + 1};
 	sptr_t read_non_existing = file_read("zzzzzzzzzzzzzzzzzzz", "r");
 	assert_true(SPTR_IS_NULL(read_non_existing));
 

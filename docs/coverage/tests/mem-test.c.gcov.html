@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2020-03-22 12:57:33</td>
+            <td class="headerValue">2020-04-02 19:21:56</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">3</td>
@@ -95,8 +95,8 @@
 <span class="lineNum">      33 </span><span class="lineCov">          1 : void test_xstrdup(void **state)</span>
 <span class="lineNum">      34 </span>            : {
 <span class="lineNum">      35 </span>            :         (void)state;
-<span class="lineNum">      36 </span><span class="lineCov">          1 :         unsigned char *s1 = &quot;Hello, world!&quot;;</span>
-<span class="lineNum">      37 </span><span class="lineCov">          1 :         unsigned char *s2 = xstrdup(s1);</span>
+<span class="lineNum">      36 </span><span class="lineCov">          1 :         char *s1 = &quot;Hello, world!&quot;;</span>
+<span class="lineNum">      37 </span><span class="lineCov">          1 :         char *s2 = xstrdup(s1);</span>
 <span class="lineNum">      38 </span><span class="lineCov">          1 :         assert_non_null(s2);</span>
 <span class="lineNum">      39 </span><span class="lineCov">          1 :         assert_string_equal(s1, s2);</span>
 <span class="lineNum">      40 </span><span class="lineCov">          1 :         assert_ptr_not_equal(s1, s2);</span>

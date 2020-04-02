@@ -6,7 +6,7 @@
 
 #define PTR_SIZE (sizeof(intptr_t))
 void *xmalloc(size_t size);
-char *xstrdup(const char* s);
+char *xstrdup(const char *s);
 
 typedef struct sized_ptr {
 	unsigned char *ptr;
@@ -18,6 +18,6 @@ typedef struct sized_ptr {
 
 sptr_t sptr_xmalloc(size_t size);
 sptr_t sptr_slice(sptr_t ptr, size_t from, size_t n);
-void sptr_free(sptr_t* ptr);
+void sptr_free(sptr_t *ptr);
 
 #endif /* _MEM_H */

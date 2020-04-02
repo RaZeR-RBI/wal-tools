@@ -31,13 +31,13 @@
             <td class="headerValue">coverage.info</td>
             <td></td>
             <td class="headerItem">Lines:</td>
-            <td class="headerCovTableEntry">27</td>
-            <td class="headerCovTableEntry">27</td>
+            <td class="headerCovTableEntry">28</td>
+            <td class="headerCovTableEntry">28</td>
             <td class="headerCovTableEntryHi">100.0 %</td>
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2020-03-22 12:57:33</td>
+            <td class="headerValue">2020-04-02 19:21:56</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">4</td>
@@ -97,23 +97,24 @@
 <span class="lineNum">      35 </span>            : {
 <span class="lineNum">      36 </span>            :         (void)state;
 <span class="lineNum">      37 </span><span class="lineCov">          1 :         char *sample_data = &quot;Hello, world&quot;;</span>
-<span class="lineNum">      38 </span><span class="lineCov">          1 :         sptr_t data = (sptr_t){&amp;sample_data, strlen(sample_data) + 1};</span>
-<span class="lineNum">      39 </span><span class="lineCov">          1 :         sptr_t read_non_existing = file_read(&quot;zzzzzzzzzzzzzzzzzzz&quot;, &quot;r&quot;);</span>
-<span class="lineNum">      40 </span><span class="lineCov">          1 :         assert_true(SPTR_IS_NULL(read_non_existing));</span>
-<span class="lineNum">      41 </span>            : 
-<span class="lineNum">      42 </span><span class="lineCov">          1 :         int result = file_write(data, &quot;out.xxx&quot;, &quot;r&quot;);</span>
-<span class="lineNum">      43 </span><span class="lineCov">          1 :         assert_false(result);</span>
-<a name="44"><span class="lineNum">      44 </span><span class="lineCov">          1 : }</span></a>
-<span class="lineNum">      45 </span>            : 
-<span class="lineNum">      46 </span><span class="lineCov">          1 : int main(void)</span>
-<span class="lineNum">      47 </span>            : {
-<span class="lineNum">      48 </span><span class="lineCov">          1 :         const struct CMUnitTest tests[] = {</span>
-<span class="lineNum">      49 </span>            :                 cmocka_unit_test(test_read),
-<span class="lineNum">      50 </span>            :                 cmocka_unit_test(test_write),
-<span class="lineNum">      51 </span>            :                 cmocka_unit_test(test_invalid_calls),
-<span class="lineNum">      52 </span>            :         };
-<span class="lineNum">      53 </span><span class="lineCov">          1 :         return cmocka_run_group_tests(tests, NULL, NULL);</span>
-<span class="lineNum">      54 </span>            : }
+<span class="lineNum">      38 </span><span class="lineCov">          2 :         sptr_t data =</span>
+<span class="lineNum">      39 </span><span class="lineCov">          1 :                 (sptr_t){(unsigned char *)&amp;sample_data, strlen(sample_data) + 1};</span>
+<span class="lineNum">      40 </span><span class="lineCov">          1 :         sptr_t read_non_existing = file_read(&quot;zzzzzzzzzzzzzzzzzzz&quot;, &quot;r&quot;);</span>
+<span class="lineNum">      41 </span><span class="lineCov">          1 :         assert_true(SPTR_IS_NULL(read_non_existing));</span>
+<span class="lineNum">      42 </span>            : 
+<span class="lineNum">      43 </span><span class="lineCov">          1 :         int result = file_write(data, &quot;out.xxx&quot;, &quot;r&quot;);</span>
+<span class="lineNum">      44 </span><span class="lineCov">          1 :         assert_false(result);</span>
+<a name="45"><span class="lineNum">      45 </span><span class="lineCov">          1 : }</span></a>
+<span class="lineNum">      46 </span>            : 
+<span class="lineNum">      47 </span><span class="lineCov">          1 : int main(void)</span>
+<span class="lineNum">      48 </span>            : {
+<span class="lineNum">      49 </span><span class="lineCov">          1 :         const struct CMUnitTest tests[] = {</span>
+<span class="lineNum">      50 </span>            :                 cmocka_unit_test(test_read),
+<span class="lineNum">      51 </span>            :                 cmocka_unit_test(test_write),
+<span class="lineNum">      52 </span>            :                 cmocka_unit_test(test_invalid_calls),
+<span class="lineNum">      53 </span>            :         };
+<span class="lineNum">      54 </span><span class="lineCov">          1 :         return cmocka_run_group_tests(tests, NULL, NULL);</span>
+<span class="lineNum">      55 </span>            : }
 </pre>
       </td>
     </tr>

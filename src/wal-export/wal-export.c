@@ -13,8 +13,6 @@
 #define PATH_MAX 4096
 #endif
 
-typedef struct image_data image_data_t;
-
 char *usage =
 	"wal-info FILENAME [-mip N] [-o FILENAME_WITHOUT_EXT]\n\n"
 	"wal-export - exports WAL textures to the specified format.\n"

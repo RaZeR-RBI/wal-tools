@@ -33,8 +33,8 @@ void test_sptr_slice(void **state)
 void test_xstrdup(void **state)
 {
 	(void)state;
-	unsigned char *s1 = "Hello, world!";
-	unsigned char *s2 = xstrdup(s1);
+	char *s1 = "Hello, world!";
+	char *s2 = xstrdup(s1);
 	assert_non_null(s2);
 	assert_string_equal(s1, s2);
 	assert_ptr_not_equal(s1, s2);

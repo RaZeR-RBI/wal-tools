@@ -62,6 +62,18 @@ $(WAL_EXPORT_OBJ): %.o : %.c
 $(WAL_EXPORT_EXE): $(WAL_EXPORT_OBJ) $(COMMON_OBJ)
 	$(CC) $(CFLAGS) $(WAL_EXPORT_OBJ) $(COMMON_OBJ) -o $@
 
+
+
+WAL_TERM_EXE = $(BUILD_DIR)/wal-term$(EXEEXT)
+WAL_TERM_SRC = src/wal-term/wal-term.c
+WAL_TERM_OBJ = $(patsubst %.c, %.o, $(WAL_TERM_SRC))
+
+$(WAL_TERM_OBJ): %.o : %.c
+	$(CC) $(CFLAGS) -std=$(C_VERSION) -c $< -o $@
+
+$(WAL_TERM_EXE): $(WAL_TERM_OBJ) $(COMMON_OBJ)
+	$(CC) $(CFLAGS) $(WAL_TERM_OBJ) $(COMMON_OBJ) -o $@
+
 # ------------------------------------------------------------------------------
 # Tests
 TESTS_SRC = $(wildcard tests/*.c)
@@ -74,7 +86,7 @@ $(TESTS_EXE): %.out : %.o
 	$(CC) $(LDFLAGS) -lcmocka $< $(COMMON_OBJ) -o $@
 
 # ------------------------------------------------------------------------------
-all: $(WAL_INFO_EXE) $(WAL_EXPORT_EXE)
+all: $(WAL_INFO_EXE) $(WAL_EXPORT_EXE) $(WAL_TERM_EXE)
 tests: $(COMMON_OBJ) $(TESTS_EXE)
 clean:
 	-rm -f $(COMMON_OBJ)
