@@ -49,7 +49,7 @@ $(EXE_OBJ): %.o : %.c
 
 $(EXE_OUT): $(COMMON_OBJ) $(EXE_OBJ)
 	$(eval OBJ_NAME=src/$(notdir $(basename $@)).o)
-	$(CC) $(CFLAGS) $(OBJ_NAME) $(COMMON_OBJ) -o $@
+	$(CC) $(CFLAGS) $(OBJ_NAME) -std=$(C_VERSION) $(COMMON_OBJ) -o $@
 
 # ------------------------------------------------------------------------------
 # Tests
