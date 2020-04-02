@@ -1,4 +1,4 @@
-.PHONY: all clean
+.PHONY: all clean tests
 .DEFAULT_GOAL := all
 
 C_VERSION ?= c89
@@ -39,40 +39,17 @@ $(COMMON_OBJ): %o : %c
 	$(CC) $(CFLAGS) -c $< -o $@
 
 # ------------------------------------------------------------------------------
-# Executables
-WAL_INFO_EXE = $(BUILD_DIR)/wal-info$(EXEEXT)
-WAL_INFO_SRC = src/wal-info/wal-info.c
-WAL_INFO_OBJ = $(patsubst %.c, %.o, $(WAL_INFO_SRC))
+EXE_SRC = $(wildcard src/*.c)
+EXE_OBJ = $(patsubst %.c, %.o, $(EXE_SRC))
+EXE_LIST = $(addsuffix $(EXEEXT), $(notdir $(basename $(EXE_SRC))))
+EXE_OUT = $(patsubst %, $(BUILD_DIR)/%$(EXEEXT), $(EXE_LIST))
 
-$(WAL_INFO_OBJ): %.o : %.c
+$(EXE_OBJ): %.o : %.c
 	$(CC) $(CFLAGS) -std=$(C_VERSION) -c $< -o $@
 
-$(WAL_INFO_EXE): $(WAL_INFO_OBJ) $(COMMON_OBJ)
-	$(CC) $(CFLAGS) $(WAL_INFO_OBJ) $(COMMON_OBJ) -o $@
-
-
-
-WAL_EXPORT_EXE = $(BUILD_DIR)/wal-export$(EXEEXT)
-WAL_EXPORT_SRC = src/wal-export/wal-export.c
-WAL_EXPORT_OBJ = $(patsubst %.c, %.o, $(WAL_EXPORT_SRC))
-
-$(WAL_EXPORT_OBJ): %.o : %.c
-	$(CC) $(CFLAGS) -std=$(C_VERSION) -c $< -o $@
-
-$(WAL_EXPORT_EXE): $(WAL_EXPORT_OBJ) $(COMMON_OBJ)
-	$(CC) $(CFLAGS) $(WAL_EXPORT_OBJ) $(COMMON_OBJ) -o $@
-
-
-
-WAL_TERM_EXE = $(BUILD_DIR)/wal-term$(EXEEXT)
-WAL_TERM_SRC = src/wal-term/wal-term.c
-WAL_TERM_OBJ = $(patsubst %.c, %.o, $(WAL_TERM_SRC))
-
-$(WAL_TERM_OBJ): %.o : %.c
-	$(CC) $(CFLAGS) -std=$(C_VERSION) -c $< -o $@
-
-$(WAL_TERM_EXE): $(WAL_TERM_OBJ) $(COMMON_OBJ)
-	$(CC) $(CFLAGS) $(WAL_TERM_OBJ) $(COMMON_OBJ) -o $@
+$(EXE_OUT): $(COMMON_OBJ) $(EXE_OBJ)
+	$(eval OBJ_NAME=src/$(notdir $(basename $@)).o)
+	$(CC) $(CFLAGS) $(OBJ_NAME) $(COMMON_OBJ) -o $@
 
 # ------------------------------------------------------------------------------
 # Tests
@@ -86,12 +63,12 @@ $(TESTS_EXE): %.out : %.o
 	$(CC) $(LDFLAGS) -lcmocka $< $(COMMON_OBJ) -o $@
 
 # ------------------------------------------------------------------------------
-all: $(WAL_INFO_EXE) $(WAL_EXPORT_EXE) $(WAL_TERM_EXE)
+all: $(EXE_OUT)
 tests: $(COMMON_OBJ) $(TESTS_EXE)
 clean:
 	-rm -f $(COMMON_OBJ)
-	-rm -f $(WAL_INFO_OBJ)
-	-rm -f $(WAL_INFO_EXE)
+	-rm -f $(EXE_OBJ)
+	-rm -f $(EXE_OUT)
 	-rm -f $(TESTS_OBJ)
 	-rm -f $(TESTS_EXE)
 	-find . -type f -name '*.gcov' -delete
