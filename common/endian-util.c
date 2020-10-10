@@ -1,5 +1,12 @@
 #include "endian-util.h"
 
+uint8_t read_8(unsigned char **buffer)
+{
+	uint8_t result = *(uint8_t*)(*buffer);
+	(*buffer)++;
+	return result;
+}
+
 uint16_t read_le16(unsigned char **buffer)
 {
 	uint8_t b1, b2;
@@ -20,6 +27,12 @@ uint32_t read_le32(unsigned char **buffer)
 	uint32_t result = le32toh((b1) + (b2 << 8) + (b3 << 16) + (b4 << 24));
 	(*buffer) += 4;
 	return result;
+}
+
+void write_8(uint8_t val, unsigned char **buffer)
+{
+	**(uint8_t **)buffer = val;
+	(*buffer)++;
 }
 
 void write_le16(uint16_t val, unsigned char **buffer)

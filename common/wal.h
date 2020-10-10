@@ -71,5 +71,7 @@ Returns a linked list of struct image_data which correspond to each mip level or
 NULL on failure.
 */
 struct ll_node *wal_read(const sptr_t data, const sptr_t palette);
+size_t wal_estimate_size(struct image_data image, int wal_type);
+sptr_t wal_write(sptr_t buf, struct image_data image, int wal_type);
 
 #endif /* _WAL_H */

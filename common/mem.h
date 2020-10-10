@@ -18,6 +18,7 @@ typedef struct sized_ptr {
 
 sptr_t sptr_xmalloc(size_t size);
 sptr_t sptr_slice(sptr_t ptr, size_t from, size_t n);
+sptr_t sptr_advance(sptr_t ptr, size_t n);
 void sptr_free(sptr_t *ptr);
 
 #endif /* _MEM_H */

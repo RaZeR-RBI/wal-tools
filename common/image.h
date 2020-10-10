@@ -9,7 +9,11 @@ enum image_type {
 	IMAGE_TYPE_TGA = 0x3
 };
 
-enum palette_type { PALETTE_TYPE_RGB_256 = 0x1 };
+enum palette_type {
+	PALETTE_TYPE_NONE = 0x0,
+	PALETTE_TYPE_RGB_256 = 0x1,
+	PALETTE_TYPE_UNKNOWN = 0xFF
+};
 
 struct image_palette {
 	sptr_t data;
@@ -32,6 +36,6 @@ struct rgb {
 	uint8_t r, g, b;
 };
 
-#define RGB_BLACK ((struct rgb){ 0, 0, 0 })
+#define RGB_BLACK ((struct rgb){0, 0, 0})
 
 #endif /* _IMAGE_H */

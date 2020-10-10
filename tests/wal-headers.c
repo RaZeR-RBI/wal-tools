@@ -73,11 +73,10 @@ static void test_malformed_header(void **state)
 	memset(&data, 0, WAL_DK_HEADER_SIZE);
 	// check Daikatana logic
 	data[0] = 3;
-	assert_int_equal(WAL_NOT_A_WAL, wal_get_type(p));
+	assert_int_equal(WAL_TYPE_DAIKATANA, wal_get_type(p));
 	// check Quake 2 logic
 	data[0] = 'a';
-	data[offsetof(struct wal_q2_header, animname)] = 4;
-	assert_int_equal(WAL_NOT_A_WAL, wal_get_type(p));
+	assert_int_equal(WAL_TYPE_QUAKE2, wal_get_type(p));
 	data[0] = 4;
 	assert_int_equal(WAL_NOT_A_WAL, wal_get_type(p));
 }

@@ -61,7 +61,6 @@ int main(int argc, const char *argv[])
 		goto on_err;
 	}
 	size_t total_len = fread(&buffer, 1, WAL_DK_HEADER_SIZE, fp);
-	fclose(fp);
 	if (total_len < WAL_Q2_HEADER_SIZE) {
 		fprintf(stderr, "Unable to read enough bytes to parse the header\n");
 		goto on_err;
@@ -82,6 +81,7 @@ int main(int argc, const char *argv[])
 			printf("File type not supported - check if it's really a WAL\n");
 			goto on_err;
 	}
+	fclose(fp);
 	return 0;
 
 on_err:

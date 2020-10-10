@@ -42,6 +42,16 @@ sptr_t sptr_slice(sptr_t ptr, size_t from, size_t n)
 	return (sptr_t){ptr.ptr + from, n};
 }
 
+sptr_t sptr_advance(sptr_t ptr, size_t n)
+{
+	if (n >= ptr.size) {
+		return SPTR_NULL;
+	} else if (n == 0) {
+		return ptr;
+	}
+	return (sptr_t){ptr.ptr + n, ptr.size - n};
+}
+
 void sptr_free(sptr_t *ptr)
 {
 	free(ptr->ptr);

@@ -27,19 +27,19 @@ int32_t wal_get_type(const unsigned char *buffer)
 	uint8_t version = (uint8_t)(*buffer);
 	if (version == 3) {
 		goto possibly_daikatana;
-	} else if (is_printable(version)) {
+	} else if (is_printable(version) || (version == 0)) {
 		goto possibly_quake2;
 	}
 	goto not_a_wal;
 
 possibly_daikatana:
-	if (invalid_name(buffer + offsetof(struct wal_dk_header, name), 1) ||
+	if (invalid_name(buffer + offsetof(struct wal_dk_header, name), 0) ||
 		invalid_name(buffer + offsetof(struct wal_dk_header, animname), 0)) {
 		goto not_a_wal;
 	}
 	return WAL_TYPE_DAIKATANA;
 possibly_quake2:
-	if (invalid_name(buffer + offsetof(struct wal_q2_header, name), 1) ||
+	if (invalid_name(buffer + offsetof(struct wal_q2_header, name), 0) ||
 		invalid_name(buffer + offsetof(struct wal_q2_header, animname), 0)) {
 		goto not_a_wal;
 	}
@@ -186,5 +186,114 @@ struct ll_node *wal_read(const sptr_t data, const sptr_t palette)
 			return wal_dk_read(data, palette);
 		default:
 			return NULL;
+	}
+}
+
+size_t wal_estimate_size(struct image_data im, int wal_type)
+{
+	size_t result = 0, mip = 0;
+	uint32_t width = im.width, height = im.height, size = 0;
+	switch (wal_type) {
+		case WAL_TYPE_QUAKE2:
+			result += WAL_Q2_HEADER_SIZE;
+			for (mip = 0; mip < MIP_LEVELS_Q2; mip++) {
+				size = width * height;
+				result += size > 0 ? size : 1;
+				width /= 2;
+				height /= 2;
+			}
+			break;
+		case WAL_TYPE_DAIKATANA:
+			result += WAL_DK_HEADER_SIZE;
+			for (mip = 0; mip < MIP_LEVELS_DK; mip++) {
+				size = width * height;
+				result += size > 0 ? size : 1;
+				width /= 2;
+				height /= 2;
+			}
+			break;
+	}
+	return result;
+}
+
+static sptr_t wal_write_mips(sptr_t buf, const struct image_data *im,
+							 size_t mips, uint32_t *offsets)
+{
+	int mip_num, x, y;
+	size_t bytes_written = 0, width = im->width, height = im->height;
+	unsigned char *ptr = NULL;
+	unsigned char *out = buf.ptr;
+	for (mip_num = 0; mip_num < mips; mip_num++) {
+		offsets[mip_num] = bytes_written;
+		ptr = im->pixels.ptr;
+		for (y = 0; y < height; y += 1 << mip_num) {
+			for (x = 0; x < width; x += 1 << mip_num) {
+				write_8(ptr[x + width * y], &out);
+				bytes_written++;
+			}
+		}
+	}
+	return sptr_advance(buf, bytes_written);
+}
+
+static sptr_t wal_write_dk(sptr_t buf, const struct image_data *im)
+{
+	int i;
+	unsigned char *ptr = buf.ptr;
+	uint32_t *offsets = (uint32_t *)(buf.ptr + 44);
+	write_8(3, &ptr);
+	ptr += 3;				  // padding
+	memset(ptr, 0, NAME_LEN); // name
+	ptr += NAME_LEN;
+	write_le32(im->width, &ptr);
+	write_le32(im->height, &ptr);
+	ptr += sizeof(uint32_t) * MIP_LEVELS_DK; // offsets will be filled later
+	memset(ptr, 0, NAME_LEN);				 // animname
+	ptr += NAME_LEN;
+	write_le32(0, &ptr); // flags
+	write_le32(0, &ptr); // contents
+	memcpy(ptr, im->palette.data.ptr, DK_PALETTE_SIZE);
+	ptr += DK_PALETTE_SIZE;
+	write_le32(0, &ptr); // value
+	wal_write_mips(sptr_advance(buf, WAL_DK_HEADER_SIZE), im, MIP_LEVELS_DK,
+				   offsets);
+	for (i = 0; i < MIP_LEVELS_DK; i++) {
+		offsets[i] += WAL_DK_HEADER_SIZE;
+	}
+	return buf;
+}
+
+static sptr_t wal_write_q2(sptr_t buf, const struct image_data *im)
+{
+	int i;
+	unsigned char *ptr = buf.ptr;
+	uint32_t *offsets = (uint32_t *)(buf.ptr + 40);
+	memset(ptr, 0, NAME_LEN); // name
+	ptr += NAME_LEN;
+	write_le32(im->width, &ptr);
+	write_le32(im->height, &ptr);
+	ptr += sizeof(uint32_t) * MIP_LEVELS_Q2; // offsets will be filled later
+	memset(ptr, 0, NAME_LEN);				 // animname
+	ptr += NAME_LEN;
+	write_le32(0, &ptr); // flags
+	write_le32(0, &ptr); // contents
+	write_le32(0, &ptr); // value
+	wal_write_mips(sptr_advance(buf, WAL_Q2_HEADER_SIZE), im, MIP_LEVELS_Q2,
+				   offsets);
+	for (i = 0; i < MIP_LEVELS_Q2; i++) {
+		offsets[i] += WAL_Q2_HEADER_SIZE;
+	}
+	return buf;
+}
+
+sptr_t wal_write(sptr_t buf, const struct image_data image, int wal_type)
+{
+	switch (wal_type) {
+		case WAL_TYPE_DAIKATANA:
+			return wal_write_dk(buf, &image);
+		case WAL_TYPE_QUAKE2:
+			return wal_write_q2(buf, &image);
+		default:
+			return SPTR_NULL;
 	}
 }

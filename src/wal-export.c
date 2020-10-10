@@ -10,12 +10,9 @@
 #include <stdlib.h>
 #include <string.h>
 
-#ifndef PATH_MAX
-#define PATH_MAX 4096
-#endif
 
 char *usage =
-	"wal-info FILENAME [-mip N] [-o FILENAME_WITHOUT_EXT]\n\n"
+	"wal-export FILENAME [-mip N] [-o FILENAME_WITHOUT_EXT]\n\n"
 	"wal-export - exports WAL textures to the specified format.\n"
 	"Supported formats: TGA (default)\n"
 	"Options:\n"
@@ -82,18 +79,6 @@ export_all:
 	}
 end:
 	return result;
-}
-
-static const char *trim_extension(const char *s)
-{
-	char buffer[PATH_MAX];
-	sprintf(&buffer[0], "%s%c", s, '\0');
-	char *delim_pos = strrchr(buffer, '.');
-	if (delim_pos == &buffer[0] || *(delim_pos - 1) == PATH_SEPARATOR) {
-		return xstrdup(&buffer[0]);
-	}
-	*delim_pos = '\0';
-	return xstrdup(&buffer[0]);
 }
 
 int main(int argc, const char *argv[])

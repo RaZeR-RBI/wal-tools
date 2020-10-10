@@ -2,6 +2,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 sptr_t file_read(const char *path, const char *mode)
 {
@@ -55,4 +56,16 @@ int file_write(sptr_t data, const char *path, const char *mode)
 end:
 	fclose(f);
 	return result;
+}
+
+const char *trim_extension(const char *s)
+{
+	char buffer[PATH_MAX];
+	sprintf(&buffer[0], "%s%c", s, '\0');
+	char *delim_pos = strrchr(buffer, '.');
+	if (delim_pos == &buffer[0] || *(delim_pos - 1) == PATH_SEPARATOR) {
+		return xstrdup(&buffer[0]);
+	}
+	*delim_pos = '\0';
+	return xstrdup(&buffer[0]);
 }

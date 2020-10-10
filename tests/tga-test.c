@@ -95,11 +95,60 @@ void test_export_from_dk(void **state)
 	}
 }
 
+void test_read_indexed(void **state)
+{
+	(void)state;
+	const sptr_t tga_data = file_read("test.tga", "r");
+	struct image_data *im = tga_read(tga_data);
+	struct tga_header *header = im->header;
+	assert_int_equal(header->color_map_type, TGA_COLOR_MAP_PRESENT);
+	assert_int_equal(header->cm_entry_size, 24);
+	assert_int_equal(im->width, 32);
+	assert_int_equal(im->height, 32);
+	assert_false(SPTR_IS_NULL(im->palette.data));
+	assert_int_equal(im->palette.type, PALETTE_TYPE_RGB_256);
+	assert_false(SPTR_IS_NULL(im->pixels));
+	assert_int_equal(im->pixels.size, 32 * 32);
+}
+
+void test_convert_to_q2(void **state)
+{
+	(void)state;
+	const sptr_t tga_data = file_read("test.tga", "r");
+	struct image_data *im = tga_read(tga_data);
+	size_t out_size = wal_estimate_size(*im, WAL_TYPE_QUAKE2);
+	assert_int_equal(out_size,
+					 WAL_Q2_HEADER_SIZE + 32 * 32 + 16 * 16 + 8 * 8 + 4 * 4);
+	sptr_t out_buf = sptr_xmalloc(out_size);
+	wal_write(out_buf, *im, WAL_TYPE_QUAKE2);
+	file_write(out_buf, "out.test.wal", "w");
+	const sptr_t test_data = file_read("ref.test.wal", "r");
+	assert_false(SPTR_IS_NULL(test_data));
+	assert_memory_equal(test_data.ptr, out_buf.ptr, out_size);
+}
+
+void test_convert_to_dk(void **state)
+{
+	(void)state;
+	const sptr_t tga_data = file_read("test.tga", "r");
+	struct image_data *im = tga_read(tga_data);
+	size_t out_size = wal_estimate_size(*im, WAL_TYPE_DAIKATANA);
+	assert_int_equal(out_size, WAL_DK_HEADER_SIZE + (32 * 32) + (16 * 16) +
+								   (8 * 8) + (4 * 4) + (2 * 2) + 1 + 1 + 1 + 1);
+	sptr_t out_buf = sptr_xmalloc(out_size);
+	wal_write(out_buf, *im, WAL_TYPE_DAIKATANA);
+	file_write(out_buf, "out.test-dk.wal", "w");
+	const sptr_t test_data = file_read("ref.test-dk.wal", "r");
+	assert_false(SPTR_IS_NULL(test_data));
+	assert_memory_equal(test_data.ptr, out_buf.ptr, out_size);
+}
+
 int main(void)
 {
-	const struct CMUnitTest tests[] = {
-		cmocka_unit_test(test_export_from_q2),
-		cmocka_unit_test(test_export_from_dk),
-	};
+	const struct CMUnitTest tests[] = {cmocka_unit_test(test_export_from_q2),
+									   cmocka_unit_test(test_export_from_dk),
+									   cmocka_unit_test(test_read_indexed),
+									   cmocka_unit_test(test_convert_to_q2),
+									   cmocka_unit_test(test_convert_to_dk)};
 	return cmocka_run_group_tests(tests, NULL, NULL);
 }
