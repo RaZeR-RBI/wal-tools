@@ -1,0 +1,211 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>LCOV - coverage.info - tests/wal-read.c</title>
+  <link rel="stylesheet" type="text/css" href="../gcov.css">
+</head>
+
+<body>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="title">LCOV - code coverage report</td></tr>
+    <tr><td class="ruler"><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+
+    <tr>
+      <td width="100%">
+        <table cellpadding=1 border=0 width="100%">
+          <tr>
+            <td width="10%" class="headerItem">Current view:</td>
+            <td width="35%" class="headerValue"><a href="../index.html">top level</a> - <a href="index.html">tests</a> - wal-read.c<span style="font-size: 80%;"> (source / <a href="wal-read.c.func-sort-c.html">functions</a>)</span></td>
+            <td width="5%"></td>
+            <td width="15%"></td>
+            <td width="10%" class="headerCovTableHead">Hit</td>
+            <td width="10%" class="headerCovTableHead">Total</td>
+            <td width="15%" class="headerCovTableHead">Coverage</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test:</td>
+            <td class="headerValue">coverage.info</td>
+            <td></td>
+            <td class="headerItem">Lines:</td>
+            <td class="headerCovTableEntry">77</td>
+            <td class="headerCovTableEntry">78</td>
+            <td class="headerCovTableEntryHi">98.7 %</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Date:</td>
+            <td class="headerValue">2020-10-12 16:06:25</td>
+            <td></td>
+            <td class="headerItem">Functions:</td>
+            <td class="headerCovTableEntry">3</td>
+            <td class="headerCovTableEntry">3</td>
+            <td class="headerCovTableEntryHi">100.0 %</td>
+          </tr>
+          <tr><td><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+        </table>
+      </td>
+    </tr>
+
+    <tr><td class="ruler"><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+  </table>
+
+  <table cellpadding=0 cellspacing=0 border=0>
+    <tr>
+      <td><br></td>
+    </tr>
+    <tr>
+      <td>
+<pre class="sourceHeading">          Line data    Source code</pre>
+<pre class="source">
+<a name="1"><span class="lineNum">       1 </span>            : #include &lt;setjmp.h&gt;</a>
+<span class="lineNum">       2 </span>            : #include &lt;stdarg.h&gt;
+<span class="lineNum">       3 </span>            : #include &lt;stddef.h&gt;
+<span class="lineNum">       4 </span>            : #include &lt;stdio.h&gt;
+<span class="lineNum">       5 </span>            : #include &lt;stdlib.h&gt;
+<span class="lineNum">       6 </span>            : #include &lt;string.h&gt;
+<span class="lineNum">       7 </span>            : 
+<span class="lineNum">       8 </span>            : #include &quot;../common/io.h&quot;
+<span class="lineNum">       9 </span>            : #include &quot;../common/quake-colormap.h&quot;
+<span class="lineNum">      10 </span>            : #include &quot;../common/wal.h&quot;
+<a name="11"><span class="lineNum">      11 </span>            : #include &quot;cmocka.h&quot;</a>
+<span class="lineNum">      12 </span>            : 
+<span class="lineNum">      13 </span><span class="lineCov">          1 : void test_q2_read(void **state)</span>
+<span class="lineNum">      14 </span>            : {
+<span class="lineNum">      15 </span>            :         (void)state;
+<span class="lineNum">      16 </span>            :         int i, j;
+<span class="lineNum">      17 </span><span class="lineCov">          1 :         sptr_t data = file_read(&quot;clip.wal&quot;, &quot;r&quot;);</span>
+<span class="lineNum">      18 </span><span class="lineCov">          1 :         sptr_t palette = {&amp;q2_palette[0], 768};</span>
+<span class="lineNum">      19 </span><span class="lineCov">          1 :         assert_false(SPTR_IS_NULL(data));</span>
+<span class="lineNum">      20 </span>            : 
+<span class="lineNum">      21 </span><span class="lineCov">          1 :         struct ll_node *mips_ll = wal_read(data, palette);</span>
+<span class="lineNum">      22 </span><span class="lineCov">          1 :         sptr_free(&amp;data);</span>
+<span class="lineNum">      23 </span><span class="lineCov">          1 :         assert_non_null(mips_ll);</span>
+<span class="lineNum">      24 </span><span class="lineCov">          1 :         assert_int_equal(MIP_LEVELS_Q2, ll_size(mips_ll));</span>
+<span class="lineNum">      25 </span>            : 
+<span class="lineNum">      26 </span>            :         struct image_data mips[MIP_LEVELS_Q2];
+<span class="lineNum">      27 </span><span class="lineCov">          1 :         mips[0] = *(struct image_data *)mips_ll-&gt;value_ptr;</span>
+<span class="lineNum">      28 </span><span class="lineCov">          1 :         mips[1] = *(struct image_data *)mips_ll-&gt;next-&gt;value_ptr;</span>
+<span class="lineNum">      29 </span><span class="lineCov">          1 :         mips[2] = *(struct image_data *)mips_ll-&gt;next-&gt;next-&gt;value_ptr;</span>
+<span class="lineNum">      30 </span><span class="lineCov">          1 :         mips[3] = *(struct image_data *)mips_ll-&gt;next-&gt;next-&gt;next-&gt;value_ptr;</span>
+<span class="lineNum">      31 </span>            : 
+<span class="lineNum">      32 </span><span class="lineCov">          1 :         struct wal_q2_header *header = (struct wal_q2_header *)mips[0].header;</span>
+<span class="lineNum">      33 </span><span class="lineCov">          1 :         assert_int_equal(32, mips[0].width);</span>
+<span class="lineNum">      34 </span><span class="lineCov">          1 :         assert_int_equal(32, mips[0].height);</span>
+<span class="lineNum">      35 </span><span class="lineCov">          1 :         assert_int_equal(0x80, header-&gt;flags);</span>
+<span class="lineNum">      36 </span><span class="lineCov">          1 :         assert_int_equal(0x30000, header-&gt;contents);</span>
+<span class="lineNum">      37 </span><span class="lineCov">          1 :         assert_int_equal(0, header-&gt;value);</span>
+<span class="lineNum">      38 </span>            : 
+<span class="lineNum">      39 </span><span class="lineCov">          1 :         assert_int_equal(32 * 32, mips[0].pixels.size);</span>
+<span class="lineNum">      40 </span><span class="lineCov">          1 :         assert_int_equal(16 * 16, mips[1].pixels.size);</span>
+<span class="lineNum">      41 </span><span class="lineCov">          1 :         assert_int_equal(8 * 8, mips[2].pixels.size);</span>
+<span class="lineNum">      42 </span><span class="lineCov">          1 :         assert_int_equal(4 * 4, mips[3].pixels.size);</span>
+<span class="lineNum">      43 </span>            : 
+<span class="lineNum">      44 </span><span class="lineCov">          1 :         uint8_t first_4_pixels[4][4] = {{0x1d, 0x1d, 0x1b, 0x5d},</span>
+<span class="lineNum">      45 </span>            :                                                                         {0x16, 0x10, 0x11, 0x10},
+<span class="lineNum">      46 </span>            :                                                                         {0x10, 0x36, 0x37, 0x10},
+<span class="lineNum">      47 </span>            :                                                                         {0x36, 0x10, 0x36, 0x85}};
+<span class="lineNum">      48 </span><span class="lineCov">          5 :         for (i = 0; i &lt; 4; i++) {</span>
+<span class="lineNum">      49 </span><span class="lineCov">         20 :                 for (j = 0; j &lt; 4; j++) {</span>
+<span class="lineNum">      50 </span><span class="lineCov">         16 :                         uint8_t expected = first_4_pixels[i][j];</span>
+<span class="lineNum">      51 </span><span class="lineCov">         16 :                         uint8_t actual = *(uint8_t *)(mips[i].pixels.ptr + j);</span>
+<span class="lineNum">      52 </span><span class="lineCov">         16 :                         assert_int_equal(actual, expected);</span>
+<span class="lineNum">      53 </span>            :                 }
+<span class="lineNum">      54 </span>            :         }
+<span class="lineNum">      55 </span>            : 
+<span class="lineNum">      56 </span><span class="lineCov">          1 :         assert_int_equal(IMAGE_TYPE_WAL_Q2, mips[0].type);</span>
+<span class="lineNum">      57 </span><span class="lineCov">          1 :         assert_int_equal(PALETTE_TYPE_RGB_256, mips[0].palette.type);</span>
+<span class="lineNum">      58 </span><span class="lineCov">          1 :         assert_ptr_equal(palette.ptr, mips[0].palette.data.ptr);</span>
+<span class="lineNum">      59 </span><span class="lineCov">          1 :         assert_int_equal(768, mips[0].palette.data.size);</span>
+<a name="60"><span class="lineNum">      60 </span><span class="lineCov">          1 : }</span></a>
+<span class="lineNum">      61 </span>            : 
+<span class="lineNum">      62 </span><span class="lineCov">          1 : void test_dk_read(void **state)</span>
+<span class="lineNum">      63 </span>            : {
+<span class="lineNum">      64 </span>            :         (void)state;
+<span class="lineNum">      65 </span>            :         int i, j;
+<span class="lineNum">      66 </span><span class="lineCov">          1 :         sptr_t data = file_read(&quot;w_glove_hiro.wal&quot;, &quot;r&quot;);</span>
+<span class="lineNum">      67 </span><span class="lineCov">          1 :         sptr_t palette = SPTR_NULL;</span>
+<span class="lineNum">      68 </span><span class="lineCov">          1 :         assert_false(SPTR_IS_NULL(data));</span>
+<span class="lineNum">      69 </span>            : 
+<span class="lineNum">      70 </span><span class="lineCov">          1 :         struct ll_node *mips_ll = wal_read(data, palette);</span>
+<span class="lineNum">      71 </span><span class="lineCov">          1 :         sptr_free(&amp;data);</span>
+<span class="lineNum">      72 </span><span class="lineCov">          1 :         assert_non_null(mips_ll);</span>
+<span class="lineNum">      73 </span><span class="lineCov">          1 :         assert_int_equal(MIP_LEVELS_DK, ll_size(mips_ll));</span>
+<span class="lineNum">      74 </span>            : 
+<span class="lineNum">      75 </span>            :         struct image_data mips[MIP_LEVELS_DK];
+<span class="lineNum">      76 </span><span class="lineCov">          1 :         struct ll_node *current = mips_ll;</span>
+<span class="lineNum">      77 </span><span class="lineCov">         10 :         for (i = 0; i &lt; MIP_LEVELS_DK; i++) {</span>
+<span class="lineNum">      78 </span><span class="lineCov">          9 :                 mips[i] = *(struct image_data *)current-&gt;value_ptr;</span>
+<span class="lineNum">      79 </span><span class="lineCov">          9 :                 current = current-&gt;next;</span>
+<span class="lineNum">      80 </span>            :         }
+<span class="lineNum">      81 </span>            : 
+<span class="lineNum">      82 </span><span class="lineCov">          1 :         struct wal_dk_header *header = (struct wal_dk_header *)mips[0].header;</span>
+<span class="lineNum">      83 </span><span class="lineCov">          1 :         assert_int_equal(128, header-&gt;width);</span>
+<span class="lineNum">      84 </span><span class="lineCov">          1 :         assert_int_equal(256, header-&gt;height);</span>
+<span class="lineNum">      85 </span><span class="lineCov">          1 :         assert_int_equal(0, header-&gt;flags);</span>
+<span class="lineNum">      86 </span><span class="lineCov">          1 :         assert_int_equal(0, header-&gt;contents);</span>
+<span class="lineNum">      87 </span><span class="lineCov">          1 :         assert_int_equal(0, header-&gt;value);</span>
+<span class="lineNum">      88 </span>            : 
+<span class="lineNum">      89 </span><span class="lineCov">          1 :         assert_int_equal(128 * 256, mips[0].pixels.size);</span>
+<span class="lineNum">      90 </span><span class="lineCov">          1 :         assert_int_equal(64 * 128, mips[1].pixels.size);</span>
+<span class="lineNum">      91 </span><span class="lineCov">          1 :         assert_int_equal(32 * 64, mips[2].pixels.size);</span>
+<span class="lineNum">      92 </span><span class="lineCov">          1 :         assert_int_equal(16 * 32, mips[3].pixels.size);</span>
+<span class="lineNum">      93 </span><span class="lineCov">          1 :         assert_int_equal(8 * 16, mips[4].pixels.size);</span>
+<span class="lineNum">      94 </span><span class="lineCov">          1 :         assert_int_equal(4 * 8, mips[5].pixels.size);</span>
+<span class="lineNum">      95 </span><span class="lineCov">          1 :         assert_int_equal(2 * 4, mips[6].pixels.size);</span>
+<span class="lineNum">      96 </span><span class="lineCov">          1 :         assert_int_equal(1 * 2, mips[7].pixels.size);</span>
+<span class="lineNum">      97 </span><span class="lineCov">          1 :         assert_int_equal(1 * 1, mips[8].pixels.size);</span>
+<span class="lineNum">      98 </span>            : 
+<span class="lineNum">      99 </span><span class="lineCov">          1 :         uint8_t first_4_pixels[9][4] = {</span>
+<span class="lineNum">     100 </span>            :                 {0x01, 0x01, 0x01, 0x01}, {0x20, 0x01, 0x10, 0x20},
+<span class="lineNum">     101 </span>            :                 {0x98, 0x10, 0x21, 0x98}, {0x10, 0x8f, 0x9c, 0x00},
+<span class="lineNum">     102 </span>            :                 {0x98, 0x9c, 0x10, 0x98}, {0x20, 0x11, 0x13, 0x22},
+<span class="lineNum">     103 </span>            :                 {0x98, 0x13, 0x8f, 0x98}, {0x11, 0x14, 0, 0},
+<span class="lineNum">     104 </span>            :                 {0x13, 0, 0, 0},
+<span class="lineNum">     105 </span>            :         };
+<span class="lineNum">     106 </span>            : 
+<span class="lineNum">     107 </span><span class="lineCov">          5 :         for (i = 0; i &lt; 4; i++) {</span>
+<span class="lineNum">     108 </span><span class="lineCov">         20 :                 for (j = 0; j &lt; 4; j++) {</span>
+<span class="lineNum">     109 </span><span class="lineCov">         16 :                         if (j &gt;= mips[i].pixels.size) {</span>
+<span class="lineNum">     110 </span><span class="lineNoCov">          0 :                                 break;</span>
+<span class="lineNum">     111 </span>            :                         }
+<span class="lineNum">     112 </span><span class="lineCov">         16 :                         uint8_t expected = first_4_pixels[i][j];</span>
+<span class="lineNum">     113 </span><span class="lineCov">         16 :                         uint8_t actual = *(uint8_t *)(mips[i].pixels.ptr + j);</span>
+<span class="lineNum">     114 </span><span class="lineCov">         16 :                         assert_int_equal(actual, expected);</span>
+<span class="lineNum">     115 </span>            :                 }
+<span class="lineNum">     116 </span>            :         }
+<span class="lineNum">     117 </span>            : 
+<span class="lineNum">     118 </span><span class="lineCov">          1 :         uint8_t first_4_colors[12] = {0x0b, 0x0b, 0x0b, 0x16, 0x16, 0x16,</span>
+<span class="lineNum">     119 </span>            :                                                                   0x21, 0x21, 0x21, 0x2c, 0x2c, 0x2c};
+<span class="lineNum">     120 </span>            : 
+<span class="lineNum">     121 </span><span class="lineCov">          1 :         assert_int_equal(IMAGE_TYPE_WAL_DK, mips[0].type);</span>
+<span class="lineNum">     122 </span><span class="lineCov">          1 :         assert_int_equal(PALETTE_TYPE_RGB_256, mips[0].palette.type);</span>
+<span class="lineNum">     123 </span><span class="lineCov">          1 :         assert_non_null(mips[0].palette.data.ptr);</span>
+<span class="lineNum">     124 </span><span class="lineCov">          1 :         assert_int_equal(768, mips[0].palette.data.size);</span>
+<span class="lineNum">     125 </span><span class="lineCov">          1 :         assert_memory_equal(&amp;first_4_colors, mips[0].palette.data.ptr, 12);</span>
+<a name="126"><span class="lineNum">     126 </span><span class="lineCov">          1 : }</span></a>
+<span class="lineNum">     127 </span>            : 
+<span class="lineNum">     128 </span><span class="lineCov">          1 : int main(void)</span>
+<span class="lineNum">     129 </span>            : {
+<span class="lineNum">     130 </span><span class="lineCov">          1 :         const struct CMUnitTest tests[] = {</span>
+<span class="lineNum">     131 </span>            :                 cmocka_unit_test(test_q2_read),
+<span class="lineNum">     132 </span>            :                 cmocka_unit_test(test_dk_read),
+<span class="lineNum">     133 </span>            :         };
+<span class="lineNum">     134 </span><span class="lineCov">          1 :         return cmocka_run_group_tests(tests, NULL, NULL);</span>
+<span class="lineNum">     135 </span>            : }
+</pre>
+      </td>
+    </tr>
+  </table>
+  <br>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="ruler"><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+    <tr><td class="versionInfo">Generated by: <a href="http://ltp.sourceforge.net/coverage/lcov.php" target="_parent">LCOV version 1.13</a></td></tr>
+  </table>
+  <br>
+
+</body>
+</html>

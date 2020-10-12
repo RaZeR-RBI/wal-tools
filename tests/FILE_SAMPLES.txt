@@ -2,4 +2,4 @@ All file samples used in tests are taken from free and legal sources.
 
 File list:
 w_glove_hiro.wal - taken from Daikatana DM (https://www.moddb.com/games/daikatana/downloads/daikatana-dm-121-full)
-clip.wal - taken from Quake 2 demo (https://archive.org/details/QuakeII_1020)
+clip.wal, colormap.pcx - taken from Quake 2 demo (https://archive.org/details/QuakeII_1020)

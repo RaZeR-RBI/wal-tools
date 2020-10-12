@@ -1,0 +1,204 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>LCOV - coverage.info - common/cli.c</title>
+  <link rel="stylesheet" type="text/css" href="../gcov.css">
+</head>
+
+<body>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="title">LCOV - code coverage report</td></tr>
+    <tr><td class="ruler"><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+
+    <tr>
+      <td width="100%">
+        <table cellpadding=1 border=0 width="100%">
+          <tr>
+            <td width="10%" class="headerItem">Current view:</td>
+            <td width="35%" class="headerValue"><a href="../index.html">top level</a> - <a href="index.html">common</a> - cli.c<span style="font-size: 80%;"> (source / <a href="cli.c.func-sort-c.html">functions</a>)</span></td>
+            <td width="5%"></td>
+            <td width="15%"></td>
+            <td width="10%" class="headerCovTableHead">Hit</td>
+            <td width="10%" class="headerCovTableHead">Total</td>
+            <td width="15%" class="headerCovTableHead">Coverage</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test:</td>
+            <td class="headerValue">coverage.info</td>
+            <td></td>
+            <td class="headerItem">Lines:</td>
+            <td class="headerCovTableEntry">71</td>
+            <td class="headerCovTableEntry">75</td>
+            <td class="headerCovTableEntryHi">94.7 %</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Date:</td>
+            <td class="headerValue">2020-10-12 16:06:25</td>
+            <td></td>
+            <td class="headerItem">Functions:</td>
+            <td class="headerCovTableEntry">9</td>
+            <td class="headerCovTableEntry">9</td>
+            <td class="headerCovTableEntryHi">100.0 %</td>
+          </tr>
+          <tr><td><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+        </table>
+      </td>
+    </tr>
+
+    <tr><td class="ruler"><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+  </table>
+
+  <table cellpadding=0 cellspacing=0 border=0>
+    <tr>
+      <td><br></td>
+    </tr>
+    <tr>
+      <td>
+<pre class="sourceHeading">          Line data    Source code</pre>
+<pre class="source">
+<a name="1"><span class="lineNum">       1 </span>            : #include &quot;cli.h&quot;</a>
+<span class="lineNum">       2 </span>            : #include &quot;mem.h&quot;
+<span class="lineNum">       3 </span>            : 
+<span class="lineNum">       4 </span>            : #include &lt;stdio.h&gt;
+<span class="lineNum">       5 </span>            : #include &lt;stdlib.h&gt;
+<span class="lineNum">       6 </span>            : #include &lt;string.h&gt;
+<span class="lineNum">       7 </span>            : 
+<a name="8"><span class="lineNum">       8 </span>            : static void print_item(void **s);</a>
+<span class="lineNum">       9 </span>            : 
+<span class="lineNum">      10 </span><span class="lineCov">          1 : char *cli_concat_args(int argc, const char *argv[])</span>
+<span class="lineNum">      11 </span>            : {
+<span class="lineNum">      12 </span>            :         int i;
+<span class="lineNum">      13 </span><span class="lineCov">          1 :         size_t length = 1;</span>
+<span class="lineNum">      14 </span><span class="lineCov">          3 :         for (i = 1; i &lt; argc; i++) {</span>
+<span class="lineNum">      15 </span><span class="lineCov">          2 :                 length += strlen(argv[i]) + 1;</span>
+<span class="lineNum">      16 </span>            :         }
+<span class="lineNum">      17 </span><span class="lineCov">          1 :         char *result = (char *)xmalloc(length);</span>
+<span class="lineNum">      18 </span>            : 
+<span class="lineNum">      19 </span><span class="lineCov">          1 :         length = 0;</span>
+<span class="lineNum">      20 </span><span class="lineCov">          3 :         for (i = 1; i &lt; argc; i++) {</span>
+<span class="lineNum">      21 </span><span class="lineCov">          2 :                 length += sprintf(result + length, &quot;%s &quot;, argv[i]);</span>
+<span class="lineNum">      22 </span>            :         }
+<span class="lineNum">      23 </span><span class="lineCov">          1 :         result[--length] = '\0';</span>
+<span class="lineNum">      24 </span><span class="lineCov">          1 :         return result;</span>
+<a name="25"><span class="lineNum">      25 </span>            : }</a>
+<span class="lineNum">      26 </span>            : 
+<span class="lineNum">      27 </span><span class="lineCov">         11 : static int starts_with(const char *prefix, const char *str)</span>
+<span class="lineNum">      28 </span>            : {
+<span class="lineNum">      29 </span><span class="lineCov">         11 :         size_t len_p = strlen(prefix);</span>
+<span class="lineNum">      30 </span><span class="lineCov">         11 :         size_t len_s = strlen(str);</span>
+<span class="lineNum">      31 </span><span class="lineCov">         11 :         return len_s &lt; len_p ? 0 : memcmp(prefix, str, len_p) == 0;</span>
+<a name="32"><span class="lineNum">      32 </span>            : }</a>
+<span class="lineNum">      33 </span>            : 
+<span class="lineNum">      34 </span><span class="lineCov">          4 : static struct ll_node *parse_arg_range(int from, int count, int *end,</span>
+<span class="lineNum">      35 </span>            :                                                                            const char *argv[], const char *prefix)
+<span class="lineNum">      36 </span>            : {
+<span class="lineNum">      37 </span><span class="lineCov">          4 :         int i = from;</span>
+<span class="lineNum">      38 </span>            :         struct cli_option option;
+<span class="lineNum">      39 </span><span class="lineCov">          4 :         if (from &gt;= count || from &lt; 0 || argv == NULL || prefix == NULL) {</span>
+<span class="lineNum">      40 </span><span class="lineNoCov">          0 :                 return NULL;</span>
+<span class="lineNum">      41 </span>            :         }
+<span class="lineNum">      42 </span><span class="lineCov">          4 :         option.name = starts_with(prefix, argv[i]) ? (char *)argv[i] : NULL;</span>
+<span class="lineNum">      43 </span><span class="lineCov">          4 :         option.values = NULL;</span>
+<span class="lineNum">      44 </span><span class="lineCov">          4 :         if (option.name != NULL) {</span>
+<span class="lineNum">      45 </span><span class="lineCov">          3 :                 i++;</span>
+<span class="lineNum">      46 </span>            :         }
+<span class="lineNum">      47 </span><span class="lineCov">          4 :         from = i;</span>
+<span class="lineNum">      48 </span><span class="lineCov">          9 :         while (i &lt; count &amp;&amp; !starts_with(prefix, argv[i])) {</span>
+<span class="lineNum">      49 </span><span class="lineCov">          5 :                 const char *val = argv[i];</span>
+<span class="lineNum">      50 </span><span class="lineCov">          5 :                 if (option.values == NULL) {</span>
+<span class="lineNum">      51 </span><span class="lineCov">          3 :                         option.values = ll_create_node(val, strlen(val) + 1);</span>
+<span class="lineNum">      52 </span>            :                 } else {
+<span class="lineNum">      53 </span><span class="lineCov">          2 :                         ll_append(option.values, val, strlen(val) + 1);</span>
+<span class="lineNum">      54 </span>            :                 }
+<span class="lineNum">      55 </span><span class="lineCov">          5 :                 i++;</span>
+<span class="lineNum">      56 </span>            :         }
+<span class="lineNum">      57 </span><span class="lineCov">          4 :         *end = i;</span>
+<span class="lineNum">      58 </span><span class="lineCov">          4 :         return ll_create_node(&amp;option, sizeof(struct cli_option));</span>
+<a name="59"><span class="lineNum">      59 </span>            : }</a>
+<span class="lineNum">      60 </span>            : 
+<span class="lineNum">      61 </span><span class="lineCov">          3 : struct ll_node *cli_parse_args(int argc, const char *argv[], const char *prefix)</span>
+<span class="lineNum">      62 </span>            : {
+<span class="lineNum">      63 </span><span class="lineCov">          3 :         int pos = 1;</span>
+<span class="lineNum">      64 </span><span class="lineCov">          3 :         int end = pos;</span>
+<span class="lineNum">      65 </span><span class="lineCov">          3 :         struct ll_node *root_node = NULL;</span>
+<span class="lineNum">      66 </span><span class="lineCov">          3 :         struct ll_node *prev_node = NULL;</span>
+<span class="lineNum">      67 </span><span class="lineCov">          3 :         struct ll_node *cur_node = NULL;</span>
+<span class="lineNum">      68 </span>            : 
+<span class="lineNum">      69 </span><span class="lineCov">          3 :         if (argc &lt;= 0 || argv == NULL) {</span>
+<span class="lineNum">      70 </span><span class="lineNoCov">          0 :                 return NULL;</span>
+<span class="lineNum">      71 </span>            :         }
+<span class="lineNum">      72 </span><span class="lineCov">          7 :         while (pos &lt; argc) {</span>
+<span class="lineNum">      73 </span><span class="lineCov">          4 :                 prev_node = cur_node;</span>
+<span class="lineNum">      74 </span><span class="lineCov">          4 :                 cur_node = parse_arg_range(pos, argc, &amp;end, argv, prefix);</span>
+<span class="lineNum">      75 </span><span class="lineCov">          4 :                 if (cur_node == NULL) {</span>
+<span class="lineNum">      76 </span><span class="lineNoCov">          0 :                         break;</span>
+<span class="lineNum">      77 </span>            :                 }
+<span class="lineNum">      78 </span><span class="lineCov">          4 :                 if (root_node == NULL) {</span>
+<span class="lineNum">      79 </span><span class="lineCov">          2 :                         root_node = cur_node;</span>
+<span class="lineNum">      80 </span>            :                 }
+<span class="lineNum">      81 </span><span class="lineCov">          4 :                 if (prev_node != NULL) {</span>
+<span class="lineNum">      82 </span><span class="lineCov">          2 :                         prev_node-&gt;next = cur_node;</span>
+<span class="lineNum">      83 </span>            :                 }
+<span class="lineNum">      84 </span><span class="lineCov">          4 :                 pos = end;</span>
+<span class="lineNum">      85 </span>            :         }
+<span class="lineNum">      86 </span><span class="lineCov">          3 :         return root_node;</span>
+<span class="lineNum">      87 </span>            : }
+<a name="88"><span class="lineNum">      88 </span>            : </a>
+<span class="lineNum">      89 </span>            : static char *g_fmt;
+<a name="90"><span class="lineNum">      90 </span><span class="lineCov">          5 : static void print_item(void **s) { printf(g_fmt, (char *)s); }</span></a>
+<span class="lineNum">      91 </span>            : 
+<span class="lineNum">      92 </span><span class="lineCov">          4 : static void print_options(void **data)</span>
+<span class="lineNum">      93 </span>            : {
+<span class="lineNum">      94 </span><span class="lineCov">          4 :         struct cli_option option = *(struct cli_option *)data;</span>
+<span class="lineNum">      95 </span><span class="lineCov">          4 :         printf(&quot;%s\n&quot;, option.name == NULL ? &quot;(args)&quot; : option.name);</span>
+<span class="lineNum">      96 </span><span class="lineCov">          4 :         g_fmt = &quot;\t\&quot;%s\&quot;\n&quot;;</span>
+<span class="lineNum">      97 </span><span class="lineCov">          4 :         ll_foreach(option.values, &amp;print_item);</span>
+<a name="98"><span class="lineNum">      98 </span><span class="lineCov">          4 : }</span></a>
+<span class="lineNum">      99 </span>            : 
+<span class="lineNum">     100 </span><span class="lineCov">          2 : void cli_print_args(struct ll_node *parsed_args)</span>
+<span class="lineNum">     101 </span>            : {
+<span class="lineNum">     102 </span><span class="lineCov">          2 :         ll_foreach(parsed_args, &amp;print_options);</span>
+<span class="lineNum">     103 </span><span class="lineCov">          2 : }</span>
+<a name="104"><span class="lineNum">     104 </span>            : </a>
+<span class="lineNum">     105 </span>            : static char *g_cli_get_option_name = NULL;
+<span class="lineNum">     106 </span><span class="lineCov">          8 : static int cli_get_option_predicate(void *data)</span>
+<span class="lineNum">     107 </span>            : {
+<span class="lineNum">     108 </span><span class="lineCov">          8 :         struct cli_option option = *(struct cli_option *)data;</span>
+<span class="lineNum">     109 </span><span class="lineCov">          8 :         if (option.name != NULL &amp;&amp; g_cli_get_option_name != NULL) {</span>
+<span class="lineNum">     110 </span><span class="lineCov">          4 :                 return strcmp(option.name, g_cli_get_option_name) == 0;</span>
+<span class="lineNum">     111 </span>            :         }
+<span class="lineNum">     112 </span><span class="lineCov">          4 :         if (option.name != NULL || g_cli_get_option_name != NULL) {</span>
+<span class="lineNum">     113 </span><span class="lineCov">          3 :                 return 0;</span>
+<span class="lineNum">     114 </span>            :         }
+<a name="115"><span class="lineNum">     115 </span><span class="lineCov">          1 :         return 1;</span></a>
+<span class="lineNum">     116 </span>            : }
+<span class="lineNum">     117 </span><span class="lineCov">          5 : const struct cli_option *cli_get_option(char *name, struct ll_node *parsed)</span>
+<span class="lineNum">     118 </span>            : {
+<span class="lineNum">     119 </span><span class="lineCov">          5 :         if (parsed == NULL) {</span>
+<span class="lineNum">     120 </span><span class="lineNoCov">          0 :                 return NULL;</span>
+<span class="lineNum">     121 </span>            :         }
+<span class="lineNum">     122 </span><span class="lineCov">          5 :         g_cli_get_option_name = name;</span>
+<span class="lineNum">     123 </span><span class="lineCov">          5 :         struct ll_node *result = ll_find(parsed, &amp;cli_get_option_predicate);</span>
+<span class="lineNum">     124 </span><span class="lineCov">          5 :         if (result == NULL) {</span>
+<span class="lineNum">     125 </span><span class="lineCov">          1 :                 return NULL;</span>
+<span class="lineNum">     126 </span>            :         }
+<span class="lineNum">     127 </span><span class="lineCov">          4 :         return result-&gt;value_ptr;</span>
+<span class="lineNum">     128 </span>            : }
+</pre>
+      </td>
+    </tr>
+  </table>
+  <br>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="ruler"><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+    <tr><td class="versionInfo">Generated by: <a href="http://ltp.sourceforge.net/coverage/lcov.php" target="_parent">LCOV version 1.13</a></td></tr>
+  </table>
+  <br>
+
+</body>
+</html>

@@ -6,7 +6,8 @@
 enum image_type {
 	IMAGE_TYPE_WAL_Q2 = 0x1,
 	IMAGE_TYPE_WAL_DK = 0x2,
-	IMAGE_TYPE_TGA = 0x3
+	IMAGE_TYPE_TGA = 0x3,
+	IMAGE_TYPE_PCX = 0x4
 };
 
 enum palette_type {
