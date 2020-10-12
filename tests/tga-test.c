@@ -140,7 +140,9 @@ void test_convert_to_dk(void **state)
 	file_write(out_buf, "out.test-dk.wal", "w");
 	const sptr_t test_data = file_read("ref.test-dk.wal", "r");
 	assert_false(SPTR_IS_NULL(test_data));
-	assert_memory_equal(test_data.ptr, out_buf.ptr, out_size);
+	assert_int_equal(*test_data.ptr, 3);
+	// skip padding bytes
+	assert_memory_equal(test_data.ptr + 4, out_buf.ptr + 4, out_size - 4);
 }
 
 int main(void)
