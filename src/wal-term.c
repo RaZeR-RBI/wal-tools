@@ -1,6 +1,7 @@
 #include "../common/cli.h"
 #include "../common/image.h"
 #include "../common/io.h"
+#include "../common/pcx.h"
 #include "../common/quake-colormap.h"
 #include "../common/wal.h"
 
@@ -10,8 +11,10 @@
 #include <string.h>
 
 char *usage =
-	"wal-term FILENAME\n"
-	"Displays a WAL texture in a terminal using 24-bit color escape codes.\n";
+	"wal-term FILENAME\n [-p PALETTE_PCX_FILE]"
+	"Displays a WAL texture in a terminal using 24-bit color escape codes.\n"
+	"Options:\n"
+	"-p FILE - use specified PCX file as the palette";
 
 wchar_t ub_char = 0x2580; /* upper half-block character */
 
@@ -21,22 +24,44 @@ int main(int argc, const char *argv[])
 		goto print_usage;
 	}
 	setlocale(LC_ALL, "C.UTF-8");
-	const char *path = cli_concat_args(argc, argv);
-	sptr_t data = file_read(path, "r");
+	struct ll_node *args = cli_parse_args(argc, argv, "-");
+	const struct cli_option *path = cli_get_option(NULL, args);
+	if (path == NULL || ll_size(path->values) != 1) {
+		goto print_usage;
+	}
+	sptr_t data = file_read((const char *)path->values->value_ptr, "r");
 	if (SPTR_IS_NULL(data)) {
 		exit(2);
 	}
 
 	sptr_t palette = SPTR_NULL;
-	switch (wal_get_type(data.ptr)) {
-		case WAL_TYPE_QUAKE2:
-			palette = (sptr_t){&q2_palette[0], 768};
-			break;
-		case WAL_TYPE_DAIKATANA:
-			break;
-		default:
-			printf("Could not parse the supplied file header\n");
-			exit(3);
+	const struct cli_option *pal_opt = cli_get_option("-p", args);
+	if (pal_opt == NULL) {
+		switch (wal_get_type(data.ptr)) {
+			case WAL_TYPE_QUAKE2:
+				palette = (sptr_t){&q2_palette[0], 768};
+				break;
+			case WAL_TYPE_DAIKATANA:
+				break;
+			default:
+				printf("Could not parse the supplied file header\n");
+				exit(3);
+		}
+	} else {
+		if (ll_size(pal_opt->values) != 1) {
+			goto print_usage;
+		}
+		sptr_t pal_image = file_read(pal_opt->values->value_ptr, "r");
+		if (SPTR_IS_NULL(pal_image)) {
+			printf("Unable to read the palette image");
+			exit(2);
+		}
+		struct image_data *im = pcx_read(pal_image);
+		if (im == NULL || SPTR_IS_NULL(im->palette.data)) {
+			printf("Supplied palette file should be a 256-color indexed PCX");
+			exit(2);
+		}
+		palette = im->palette.data;
 	}
 	struct ll_node *mips_ll = wal_read(data, palette);
 	const image_data_t im = *(const image_data_t *)mips_ll->value_ptr;
