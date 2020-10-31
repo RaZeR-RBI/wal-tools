@@ -13,7 +13,11 @@ trickery.
 
 Usage:
 ```
-wal-term texture.wal
+wal-term FILENAME [-p PALETTE_PCX_FILE]
+
+Displays a WAL texture in a terminal using 24-bit color escape codes.
+Options:
+-p FILE - use specified PCX file as the palette
 ```
 
 Screenshot:

@@ -11,10 +11,10 @@
 #include <string.h>
 
 char *usage =
-	"wal-term FILENAME\n [-p PALETTE_PCX_FILE]"
+	"wal-term FILENAME [-p PALETTE_PCX_FILE]\n\n"
 	"Displays a WAL texture in a terminal using 24-bit color escape codes.\n"
 	"Options:\n"
-	"-p FILE - use specified PCX file as the palette";
+	"-p FILE - use specified PCX file as the palette\n";
 
 wchar_t ub_char = 0x2580; /* upper half-block character */
 
