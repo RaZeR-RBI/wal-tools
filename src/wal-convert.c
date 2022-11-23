@@ -65,6 +65,10 @@ int main(int argc, const char *argv[])
 	const sptr_t input = file_read(src_path, "r");
 	struct image_data *im = tga_read(input);
 	int error = 0;
+	if (!im->pixels.size) {
+		printf("Unsupported TGA data type\n");
+		error = 1;
+	}
 	if ((im->width < 16) || (im->width % 16 != 0) || (im->height < 16) ||
 		(im->height % 16 != 0)) {
 		printf("Input texture width and height must be a multiple of 16\n");

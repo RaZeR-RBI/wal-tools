@@ -60,7 +60,7 @@ $(TESTS_OBJ): %.o : %.c
 	$(CC) $(CFLAGS) -c $< -o $@
 
 $(TESTS_EXE): %.out : %.o
-	$(CC) $(LDFLAGS) -lcmocka $< $(COMMON_OBJ) -o $@
+	$(CC) $(LDFLAGS) $< $(COMMON_OBJ) -o $@ -lcmocka
 
 # ------------------------------------------------------------------------------
 all: $(EXE_OUT)

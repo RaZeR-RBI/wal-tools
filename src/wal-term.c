@@ -58,7 +58,7 @@ int main(int argc, const char *argv[])
 		}
 		struct image_data *im = pcx_read(pal_image);
 		if (im == NULL || SPTR_IS_NULL(im->palette.data)) {
-			printf("Supplied palette file should be a 256-color indexed PCX");
+			printf("Supplied palette file should be a 256-color indexed PCX\n");
 			exit(2);
 		}
 		palette = im->palette.data;

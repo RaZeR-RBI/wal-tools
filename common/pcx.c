@@ -39,7 +39,7 @@ struct image_data *pcx_read(const sptr_t data)
 	im->type = IMAGE_TYPE_PCX;
 	im->header = header;
 	if (content.size > 768) {
-		has_palette = content.ptr[content.size - PCX_PALETTE_SIZE - 1] == 0x0C;
+		has_palette = header->bpp == 8;
 	}
 	im->width = header->xmax - header->xmin;
 	im->height = header->ymax - header->ymin;

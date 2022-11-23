@@ -95,6 +95,35 @@ static sptr_t tga_read_header(const sptr_t data, struct tga_header *out)
 	return sptr_advance(data, TGA_HEADER_SIZE);
 }
 
+static void tga_read_rle_indexed(struct image_data *im, const sptr_t data)
+{
+	int i;
+	unsigned char b;
+	unsigned char *p = data.ptr;
+	unsigned char *d;
+	int pixel_count = 0;
+	int run_count = 0;
+	im->pixels = sptr_xmalloc(im->width * im->height);
+	d = im->pixels.ptr;
+	while (pixel_count < im->pixels.size) {
+		b = *p;
+		run_count = (b & ~128) + 1;
+		p++;
+		if (b & 128) { // RLE packet
+			for (i = 0; i < run_count; i++) {
+				*d = *p;
+				d++;
+			}
+			p++;
+		} else { // raw packet
+			memcpy(d, p, run_count);
+			d += run_count;
+			p += run_count;
+		}
+		pixel_count += run_count;
+	}
+}
+
 struct image_data *tga_read(const sptr_t data)
 {
 	struct tga_header *header = xmalloc(sizeof(struct tga_header));
@@ -130,6 +159,9 @@ struct image_data *tga_read(const sptr_t data)
 		(header->im_pixel_depth == 8)) {
 		im->pixels = sptr_xmalloc(im->width * im->height);
 		memcpy(im->pixels.ptr, content.ptr, im->pixels.size);
+	} else if ((header->image_type == TGA_IMAGE_TYPE_RLE_COLOR_MAPPED) &&
+			   (header->im_pixel_depth == 8)) {
+		tga_read_rle_indexed(im, content);
 	}
 	return im;
 }
