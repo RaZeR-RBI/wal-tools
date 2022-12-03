@@ -42,7 +42,7 @@ $(COMMON_OBJ): %o : %c
 EXE_SRC = $(wildcard src/*.c)
 EXE_OBJ = $(patsubst %.c, %.o, $(EXE_SRC))
 EXE_LIST = $(addsuffix $(EXEEXT), $(notdir $(basename $(EXE_SRC))))
-EXE_OUT = $(patsubst %, $(BUILD_DIR)/%$(EXEEXT), $(EXE_LIST))
+EXE_OUT = $(patsubst %, $(BUILD_DIR)/%, $(EXE_LIST))
 
 $(EXE_OBJ): %.o : %.c
 	$(CC) $(CFLAGS) -std=$(C_VERSION) -c $< -o $@

@@ -1,7 +1,6 @@
 #ifndef _ENDIAN_UTIL_H
 #define _ENDIAN_UTIL_H
 
-#include <endian.h>
 #include <stdint.h>
 
 uint8_t read_8(unsigned char **buffer);
