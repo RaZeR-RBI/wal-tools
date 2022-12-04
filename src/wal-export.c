@@ -121,7 +121,7 @@ int main(int argc, const char *argv[])
 	}
 
 	/* Read the source file ------------------------------------------------- */
-	sptr_t src_data = file_read(src_path, "r");
+	sptr_t src_data = file_read(src_path, "rb");
 	if (SPTR_IS_NULL(src_data) || src_data.size < WAL_Q2_HEADER_SIZE) {
 		exit(2);
 	}
@@ -144,7 +144,7 @@ int main(int argc, const char *argv[])
 	}
 	size_t mip_count = ll_size(mips_ll);
 	if (mip >= 0 && mip_count <= mip) {
-		printf("MIP number is too high for this file (expected 0 to %ld)\n",
+		printf("MIP number is too high for this file (expected 0 to %lld)\n",
 			   mip_count);
 		exit(5);
 	}

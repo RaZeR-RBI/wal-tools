@@ -15,7 +15,7 @@ void test_export_from_q2(void **state)
 {
 	(void)state;
 	int i;
-	sptr_t wal_data = file_read("clip.wal", "r");
+	sptr_t wal_data = file_read("clip.wal", "rb");
 	sptr_t palette = (sptr_t){&q2_palette[0], 768};
 	assert_false(SPTR_IS_NULL(wal_data));
 
@@ -43,10 +43,10 @@ void test_export_from_q2(void **state)
 	/* compare with reference files */
 	for (i = 0; i < MIP_LEVELS_Q2; i++) {
 		sprintf(&fname_buf[0], "ref.test_export_from_q2-mip-%d.tga%c", i, '\0');
-		sptr_t ref_data = file_read(&fname_buf[0], "r");
+		sptr_t ref_data = file_read(&fname_buf[0], "rb");
 		assert_false(SPTR_IS_NULL(ref_data));
 		sprintf(&fname_buf[0], "out.test_export_from_q2-mip-%d.tga%c", i, '\0');
-		sptr_t test_data = file_read(&fname_buf[0], "r");
+		sptr_t test_data = file_read(&fname_buf[0], "rb");
 		assert_false(SPTR_IS_NULL(test_data));
 		assert_int_equal(ref_data.size, test_data.size);
 		assert_memory_equal(ref_data.ptr, test_data.ptr, ref_data.size);
@@ -57,7 +57,7 @@ void test_export_from_dk(void **state)
 {
 	(void)state;
 	int i;
-	sptr_t wal_data = file_read("w_glove_hiro.wal", "r");
+	sptr_t wal_data = file_read("w_glove_hiro.wal", "rb");
 	assert_false(SPTR_IS_NULL(wal_data));
 
 	struct ll_node *mips_ll = wal_read(wal_data, SPTR_NULL);
@@ -85,10 +85,10 @@ void test_export_from_dk(void **state)
 	/* compare with reference files */
 	for (i = 0; i < MIP_LEVELS_DK; i++) {
 		sprintf(&fname_buf[0], "ref.test_export_from_dk-mip-%d.tga%c", i, '\0');
-		sptr_t ref_data = file_read(&fname_buf[0], "r");
+		sptr_t ref_data = file_read(&fname_buf[0], "rb");
 		assert_false(SPTR_IS_NULL(ref_data));
 		sprintf(&fname_buf[0], "out.test_export_from_dk-mip-%d.tga%c", i, '\0');
-		sptr_t test_data = file_read(&fname_buf[0], "r");
+		sptr_t test_data = file_read(&fname_buf[0], "rb");
 		assert_false(SPTR_IS_NULL(test_data));
 		assert_int_equal(ref_data.size, test_data.size);
 		assert_memory_equal(ref_data.ptr, test_data.ptr, ref_data.size);
@@ -98,7 +98,7 @@ void test_export_from_dk(void **state)
 void test_read_indexed(void **state)
 {
 	(void)state;
-	const sptr_t tga_data = file_read("test.tga", "r");
+	const sptr_t tga_data = file_read("test.tga", "rb");
 	struct image_data *im = tga_read(tga_data);
 	struct tga_header *header = im->header;
 	assert_int_equal(header->color_map_type, TGA_COLOR_MAP_PRESENT);
@@ -114,7 +114,7 @@ void test_read_indexed(void **state)
 void test_convert_to_q2(void **state)
 {
 	(void)state;
-	const sptr_t tga_data = file_read("test.tga", "r");
+	const sptr_t tga_data = file_read("test.tga", "rb");
 	struct image_data *im = tga_read(tga_data);
 	size_t out_size = wal_estimate_size(*im, WAL_TYPE_QUAKE2);
 	assert_int_equal(out_size,
@@ -122,7 +122,7 @@ void test_convert_to_q2(void **state)
 	sptr_t out_buf = sptr_xmalloc(out_size);
 	wal_write(out_buf, *im, WAL_TYPE_QUAKE2);
 	file_write(out_buf, "out.test.wal", "w");
-	const sptr_t test_data = file_read("ref.test.wal", "r");
+	const sptr_t test_data = file_read("ref.test.wal", "rb");
 	assert_false(SPTR_IS_NULL(test_data));
 	assert_memory_equal(test_data.ptr, out_buf.ptr, out_size);
 }
@@ -130,7 +130,7 @@ void test_convert_to_q2(void **state)
 void test_convert_to_dk(void **state)
 {
 	(void)state;
-	const sptr_t tga_data = file_read("test.tga", "r");
+	const sptr_t tga_data = file_read("test.tga", "rb");
 	struct image_data *im = tga_read(tga_data);
 	size_t out_size = wal_estimate_size(*im, WAL_TYPE_DAIKATANA);
 	assert_int_equal(out_size, WAL_DK_HEADER_SIZE + (32 * 32) + (16 * 16) +
@@ -138,7 +138,7 @@ void test_convert_to_dk(void **state)
 	sptr_t out_buf = sptr_xmalloc(out_size);
 	wal_write(out_buf, *im, WAL_TYPE_DAIKATANA);
 	file_write(out_buf, "out.test-dk.wal", "w");
-	const sptr_t test_data = file_read("ref.test-dk.wal", "r");
+	const sptr_t test_data = file_read("ref.test-dk.wal", "rb");
 	assert_false(SPTR_IS_NULL(test_data));
 	assert_int_equal(*test_data.ptr, 3);
 	// skip padding bytes

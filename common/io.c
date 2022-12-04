@@ -17,18 +17,30 @@ sptr_t file_read(const char *path, const char *mode)
 		return result;
 	}
 	fseek(f, 0, SEEK_END);
-	long fsize = ftell(f);
+	size_t fsize = ftell(f);
 	fseek(f, 0, SEEK_SET);
 
 	unsigned char *data = xmalloc(fsize);
-	if (fread(data, 1, fsize, f) != fsize) {
-		fprintf(stderr, "Unable to read all bytes from a file\n");
+	size_t total = fread(data, 1, fsize, f);
+	if (total) {
+		result.ptr = data;
+		result.size = total;
+		if (fsize != total) {
+			fprintf(stderr, "Warning: only %lld of %lld bytes read from \"%s\"\n", total, fsize, path);
+		}
+	} else {
+		perror("Unable to read file\n");
 		fprintf(stderr, "File: \"%s\", mode \"%s\"\n", path, mode);
+		if (ferror(f)) {
+			fprintf(stderr, "IO error %d\n", ferror(f));
+		} else if (feof(f)) {
+			fprintf(stderr, "Unexpected EOF\n");
+		}
 		free(data);
+		total = 0;
+		data = NULL;
 		goto end;
 	}
-	result.ptr = data;
-	result.size = fsize;
 end:
 	fclose(f);
 	return result;

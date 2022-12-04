@@ -14,7 +14,7 @@ void test_q2_read(void **state)
 {
 	(void)state;
 	int i, j;
-	sptr_t data = file_read("clip.wal", "r");
+	sptr_t data = file_read("clip.wal", "rb");
 	sptr_t palette = {&q2_palette[0], 768};
 	assert_false(SPTR_IS_NULL(data));
 
@@ -63,7 +63,7 @@ void test_dk_read(void **state)
 {
 	(void)state;
 	int i, j;
-	sptr_t data = file_read("w_glove_hiro.wal", "r");
+	sptr_t data = file_read("w_glove_hiro.wal", "rb");
 	sptr_t palette = SPTR_NULL;
 	assert_false(SPTR_IS_NULL(data));
 

@@ -115,7 +115,7 @@ int main(int argc, const char *argv[])
 		return 1;
 	}
 
-	sptr_t src = file_read(o_path->values->value_ptr, "r");
+	sptr_t src = file_read(o_path->values->value_ptr, "rb");
 	if (SPTR_IS_NULL(src)) {
 		return 2;
 	}

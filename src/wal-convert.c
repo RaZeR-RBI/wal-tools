@@ -62,7 +62,7 @@ int main(int argc, const char *argv[])
 		goto print_usage;
 	}
 
-	const sptr_t input = file_read(src_path, "r");
+	const sptr_t input = file_read(src_path, "rb");
 	struct image_data *im = tga_read(input);
 	int error = 0;
 	if (!im->pixels.size) {

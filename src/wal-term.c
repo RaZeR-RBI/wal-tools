@@ -29,7 +29,7 @@ int main(int argc, const char *argv[])
 	if (path == NULL || ll_size(path->values) != 1) {
 		goto print_usage;
 	}
-	sptr_t data = file_read((const char *)path->values->value_ptr, "r");
+	sptr_t data = file_read((const char *)path->values->value_ptr, "rb");
 	if (SPTR_IS_NULL(data)) {
 		exit(2);
 	}
@@ -51,7 +51,7 @@ int main(int argc, const char *argv[])
 		if (ll_size(pal_opt->values) != 1) {
 			goto print_usage;
 		}
-		sptr_t pal_image = file_read(pal_opt->values->value_ptr, "r");
+		sptr_t pal_image = file_read(pal_opt->values->value_ptr, "rb");
 		if (SPTR_IS_NULL(pal_image)) {
 			printf("Unable to read the palette image");
 			exit(2);

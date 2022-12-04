@@ -13,7 +13,7 @@
 void test_read(void **state)
 {
 	(void)state;
-	const sptr_t pcx_data = file_read("colormap.pcx", "r");
+	const sptr_t pcx_data = file_read("colormap.pcx", "rb");
 	struct image_data *im = pcx_read(pcx_data);
 	assert_int_equal(im->width, 256);
 	assert_int_equal(im->height, 320);
