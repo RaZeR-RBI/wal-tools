@@ -29,6 +29,7 @@ typedef struct image_data {
 	uint32_t height;
 	void *header; /* pointer to original header struct */
 	void *userdata;
+	int	alpha_pixels; /* has alpha pixels */
 } image_data_t;
 
 void flip_bgr(sptr_t colors);
