@@ -48,8 +48,8 @@ struct tga_header {
 
 #define TGA_HEADER_SIZE 18
 
-size_t tga_estimate_size(struct image_data image);
-sptr_t tga_write(sptr_t buf, const struct image_data image);
+size_t tga_estimate_size(struct image_data image, int expand);
+sptr_t tga_write(sptr_t buf, const struct image_data image, int expand);
 struct image_data *tga_read(const sptr_t data);
 
 #endif /* _TGA_H */

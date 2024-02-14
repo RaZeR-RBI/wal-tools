@@ -32,7 +32,7 @@ void test_export_from_q2(void **state)
 	for (i = 0; i < MIP_LEVELS_Q2; i++) {
 		memset(&fname_buf[0], 0, 256);
 		sprintf(&fname_buf[0], "out.test_export_from_q2-mip-%d.tga%c", i, '\0');
-		size_t size = tga_estimate_size(mips[i]);
+		size_t size = tga_estimate_size(mips[i], 0);
 		assert_int_not_equal(0, size);
 		sptr_t buf = sptr_xmalloc(size);
 		tga_write(buf, mips[i]);
@@ -74,7 +74,7 @@ void test_export_from_dk(void **state)
 	for (i = 0; i < MIP_LEVELS_DK; i++) {
 		memset(&fname_buf[0], 0, 256);
 		sprintf(&fname_buf[0], "out.test_export_from_dk-mip-%d.tga%c", i, '\0');
-		size_t size = tga_estimate_size(mips[i]);
+		size_t size = tga_estimate_size(mips[i], 0);
 		assert_int_not_equal(0, size);
 		sptr_t buf = sptr_xmalloc(size);
 		tga_write(buf, mips[i]);

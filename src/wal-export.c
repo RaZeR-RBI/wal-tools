@@ -12,11 +12,12 @@
 
 
 char *usage =
-	"wal-export FILENAME [-mip N] [-o FILENAME_WITHOUT_EXT]\n\n"
+	"wal-export FILENAME [-mip N] [-expand] [-o FILENAME_WITHOUT_EXT]\n\n"
 	"wal-export - exports WAL textures to the specified format.\n"
 	"Supported formats: TGA (default)\n"
 	"Options:\n"
 	"\t-mip N: export mip N only (Quake 2 - [0..3], Daikatana - [0..8]\n"
+	"\t-expand: expand the palette\n"
 	"\t-o FILE: export to specified filename (extension and mip N is "
 	"added)\n"
 	"Output filename is constructed as follows (for example):\n"
@@ -24,14 +25,14 @@ char *usage =
 	"If -mip is specified, it's omitted from output filename:\n"
 	"source.wal -> source.tga\n";
 
-static int export_tga_single(const image_data_t image, const char *path)
+static int export_tga_single(const image_data_t image, const char *path, int expand)
 {
-	size_t len = tga_estimate_size(image);
+	size_t len = tga_estimate_size(image, expand);
 	if (!len) {
 		return 0;
 	}
 	sptr_t data = sptr_xmalloc(len);
-	if (SPTR_IS_NULL(tga_write(data, image))) {
+	if (SPTR_IS_NULL(tga_write(data, image, expand))) {
 		return 0;
 	}
 	if (!file_write(data, path, "w")) {
@@ -40,7 +41,7 @@ static int export_tga_single(const image_data_t image, const char *path)
 	return 1;
 }
 
-static int export_tga(struct ll_node *mips, int mip_num, const char *out_path)
+static int export_tga(struct ll_node *mips, int mip_num, const char *out_path, int expand)
 {
 	char buffer[PATH_MAX];
 	int i = 0;
@@ -57,7 +58,7 @@ static int export_tga(struct ll_node *mips, int mip_num, const char *out_path)
 	sprintf(&buffer[0], "%s.tga%c", out_path, '\0');
 	printf("%s\n", &buffer[0]);
 	const image_data_t im = *(const image_data_t *)mip->value_ptr;
-	if (!export_tga_single(im, &buffer[0])) {
+	if (!export_tga_single(im, &buffer[0], expand)) {
 		fprintf(stderr, "Unable to write to file \"%s\"\n", &buffer[0]);
 		result = 0;
 	}
@@ -70,7 +71,7 @@ export_all:
 		const image_data_t im = *(const image_data_t *)cur->value_ptr;
 		sprintf(&buffer[0], "%s-mip-%d.tga%c", out_path, i, '\0');
 		printf("%s\n", &buffer[0]);
-		if (!export_tga_single(im, &buffer[0])) {
+		if (!export_tga_single(im, &buffer[0], expand)) {
 			fprintf(stderr, "Unable to write to file \"%s\"\n", &buffer[0]);
 			result = 0;
 		}
@@ -109,6 +110,16 @@ int main(int argc, const char *argv[])
 		}
 		mip = mip_num;
 	}
+	/* -expand */
+	int expand = 1;
+	/*
+	const struct cli_option *expand_opt = cli_get_option("-expand", args);
+	if (expand_opt != NULL) {
+		if (ll_size(expand_opt->values) != 1) {
+			goto print_usage;
+		}
+		expand = 1;
+	}*/
 
 	/* -o FILENAME_WITHOUT_EXT */
 	const char *dst_path = trim_extension(src_path);
@@ -149,7 +160,7 @@ int main(int argc, const char *argv[])
 		exit(5);
 	}
 
-	return export_tga(mips_ll, mip, dst_path);
+	return export_tga(mips_ll, mip, dst_path, expand);
 print_usage:
 	printf(usage);
 	return 1;
