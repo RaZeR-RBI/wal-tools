@@ -6,6 +6,13 @@ and Daikatana variations.
 
 To compile, run `make` in the repository's root. If compiling on Windows, use MSYS2/MinGW.
 
+If you're using CMake, you can compile the project by usual means:
+```
+mkdir -p build && cd build
+cmake ..
+make
+```
+
 
 ## wal-term
 Displays specified texture right in your terminal with some ANSI escape code
