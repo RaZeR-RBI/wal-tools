@@ -145,6 +145,15 @@ static struct ll_node *wal_dk_read(const sptr_t data, const sptr_t palette)
 		}
 		sptr_t copy = {xmalloc(p.size), p.size};
 		memcpy(copy.ptr, p.ptr, p.size);
+		int alpha_pixels = 0;
+		for (int j = 0; j < p.size; j++)
+		{
+			if (copy.ptr[j] == 255)
+			{
+				alpha_pixels = 1;
+				break;
+			}
+		}
 
 		struct image_palette p_data = {pal, PALETTE_TYPE_RGB_256};
 		uint32_t width = header->width / divisor;
@@ -156,7 +165,7 @@ static struct ll_node *wal_dk_read(const sptr_t data, const sptr_t palette)
 			height = 1;
 		}
 		struct image_data i_data = {
-			copy, p_data, IMAGE_TYPE_WAL_DK, width, height, header, NULL};
+			copy, p_data, IMAGE_TYPE_WAL_DK, width, height, header, NULL, alpha_pixels};
 		mips[i] = i_data;
 		expected_len /= 4;
 		if (expected_len <= 0) {
