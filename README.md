@@ -4,7 +4,9 @@ This repository contains command-line tools to work with .WAL texture files
 (found in games based on Quake 2 engine). Supports both vanilla Quake 2 textures
 and Daikatana variations.
 
-To compile, run `make` in the repository's root. If compiling on Windows, use MSYS2/MinGW.
+The project can be compiled by either Make or CMake.
+
+To compile using make, run `make` in the repository's root. If compiling on Windows, you need MSYS2/MinGW for that.
 
 If you're using CMake, you can compile the project by usual means:
 ```
