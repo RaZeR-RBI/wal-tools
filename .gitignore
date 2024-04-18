@@ -12,6 +12,7 @@ tests/out*
 
 # Output folder
 out/
+build/
 
 # Prerequisites
 *.d

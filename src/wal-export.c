@@ -91,7 +91,7 @@ int main(int argc, const char *argv[])
 	/* Validate args -------------------------------------------------------- */
 	/* FILENAME */
 	const struct cli_option *filenames = cli_get_option(NULL, args);
-	if (ll_size(filenames->values) != 1) {
+	if (filenames == NULL || ll_size(filenames->values) != 1) {
 		goto print_usage;
 	}
 	const char *src_path = (const char *)filenames->values->value_ptr;
@@ -111,15 +111,11 @@ int main(int argc, const char *argv[])
 		mip = mip_num;
 	}
 	/* -expand */
-	int expand = 1;
-	/*
+	int expand = 0;
 	const struct cli_option *expand_opt = cli_get_option("-expand", args);
 	if (expand_opt != NULL) {
-		if (ll_size(expand_opt->values) != 1) {
-			goto print_usage;
-		}
 		expand = 1;
-	}*/
+	}
 
 	/* -o FILENAME_WITHOUT_EXT */
 	const char *dst_path = trim_extension(src_path);
